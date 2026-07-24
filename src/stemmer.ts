@@ -1,26 +1,8 @@
 import defaultDictionary from "./dictionary.json";
+import { removePrefix } from "./prefix-removal";
+import { removeParticle, removePossessive, removeSuffix } from "./suffix-removal";
 
-/**
- * Result of removing an affix (suffix, particle, or possessive) from a word.
- */
-export interface AffixRemovalResult {
-  /** The affix that was removed. */
-  removed: string;
-  /** The word after affix removal. */
-  word: string;
-}
-
-/**
- * Result of removing a prefix from a word.
- */
-export interface PrefixRemovalResult {
-  /** The prefix that was removed. */
-  removed: string;
-  /** The word after prefix removal. */
-  word: string;
-  /** Characters to recode when the root is not found directly. */
-  recoding: string[] | null;
-}
+export type { AffixRemovalResult, PrefixRemovalResult } from "./types";
 
 /**
  * Indonesian language stemmer based on the Sastrawi algorithm.
@@ -40,10 +22,6 @@ export interface PrefixRemovalResult {
 export default class Stemmer {
   /** The internal dictionary used for root word lookup. */
   public internalDictionary: Set<string>;
-  /** Vowel characters used in affix removal patterns. */
-  public vowel: string;
-  /** Consonant characters used in affix removal patterns. */
-  public consonant: string;
 
   /**
    * Creates a new Stemmer instance.
@@ -51,8 +29,6 @@ export default class Stemmer {
    */
   constructor(dictionary: string[] = defaultDictionary) {
     this.internalDictionary = new Set(dictionary);
-    this.vowel = "aiueo";
-    this.consonant = "bcdfghjklmnpqrstvwxyz";
   }
 
   /**
@@ -74,16 +50,6 @@ export default class Stemmer {
   }
 
   /**
-   * Checks if a string starts with a given prefix.
-   * @param needle - The prefix to check for.
-   * @param haystack - The string to search in.
-   * @returns `true` if haystack starts with needle.
-   */
-  hasPrefix(needle: string, haystack: string): boolean {
-    return haystack.startsWith(needle);
-  }
-
-  /**
    * Checks if a word exists in the internal dictionary.
    * @param word - The word to look up.
    * @returns `true` if the word is in the dictionary.
@@ -100,40 +66,6 @@ export default class Stemmer {
     return this.internalDictionary;
   }
 
-  /**
-   * Safely retrieves a character from a word by index.
-   * @param word - The word to get a character from.
-   * @param index - The character index.
-   * @returns The character at the index, or an empty string if out of bounds.
-   */
-  newChar(word: string, index: number): string {
-    if (index >= word.length) {
-      return "";
-    }
-    return word[index];
-  }
-
-  /**
-   * Checks if a character is one of the given characters.
-   * @param c - Single character to check.
-   * @param chars - String of characters to match against.
-   * @returns `true` if c is found in chars.
-   */
-  isOneOf(c: string, chars: string): boolean {
-    if (c.length !== 1) return false;
-    return chars.indexOf(c) !== -1;
-  }
-
-  /**
-   * Checks if a character is NOT one of the given characters.
-   * @param c - Single character to check.
-   * @param chars - String of characters to match against.
-   * @returns `true` if c is NOT found in chars.
-   */
-  isNotOneOf(c: string, chars: string): boolean {
-    return !this.isOneOf(c, chars);
-  }
-
   private returnIfFound(word: string): string | null {
     return this.find(word) ? word : null;
   }
@@ -145,34 +77,28 @@ export default class Stemmer {
     let w = originalWord;
 
     if (prefixFirst) {
-      // Remove prefix first
       const pf = this.removePrefixes(w);
       if (pf[0]) return pf[1];
       w = pf[1];
     }
 
-    // Remove particle
-    [particle, w] = this.removeParticle(w);
+    [particle, w] = removeParticle(w);
     let r = this.returnIfFound(w);
     if (r) return r;
 
-    // Remove possessive
-    [possessive, w] = this.removePossessive(w);
+    [possessive, w] = removePossessive(w);
     r = this.returnIfFound(w);
     if (r) return r;
 
-    // Remove suffix
-    [suffix, w] = this.removeSuffix(w);
+    [suffix, w] = removeSuffix(w);
     r = this.returnIfFound(w);
     if (r) return r;
 
     if (!prefixFirst) {
-      // Remove prefix last (suffix-first mode)
       const pf = this.removePrefixes(w);
       if (pf[0]) return pf[1];
     }
 
-    // If no root found, do lastReturnLoop
     const removedSuffixes = suffix === "kan"
       ? ["", "k", "an", possessive || "", particle || ""]
       : ["", suffix || "", possessive || "", particle || ""];
@@ -216,41 +142,7 @@ export default class Stemmer {
     const result = this.removeAffixes(word, prefixFirst);
     if (result) return result;
 
-    // When EVERYTHING failed, return original word
     return originalWord;
-  }
-
-  /**
-   * Removes a particle suffix (-lah, -kah, -tah, -pun) from a word.
-   * @param word - The word to process.
-   * @returns A tuple of [removed particle, word without particle].
-   */
-  removeParticle(word: string): [string, string] {
-    const result = word.replace(/-?(lah|kah|tah|pun)$/g, "");
-    const particle = word.replace(result, "");
-    return [particle, result];
-  }
-
-  /**
-   * Removes a possessive suffix (-ku, -mu, -nya) from a word.
-   * @param word - The word to process.
-   * @returns A tuple of [removed possessive, word without possessive].
-   */
-  removePossessive(word: string): [string, string] {
-    const result = word.replace(/-?(ku|mu|nya)$/g, "");
-    const possessive = word.replace(result, "");
-    return [possessive, result];
-  }
-
-  /**
-   * Removes a suffix (-is, -isme, -isasi, -i, -kan, -an) from a word.
-   * @param word - The word to process.
-   * @returns A tuple of [removed suffix, word without suffix].
-   */
-  removeSuffix(word: string): [string, string] {
-    const result = word.replace(/-?(is|isme|isasi|i|kan|an)$/g, "");
-    const suffix = word.replace(result, "");
-    return [suffix, result];
   }
 
   /**
@@ -263,7 +155,7 @@ export default class Stemmer {
    * @param suffixes - The suffix parts that were removed.
    * @returns A tuple of [found, root word]. `found` is true if a root was identified.
    */
-  lastReturnLoop(originalWord: string, suffixes: string[]): [boolean, string] {
+  private lastReturnLoop(originalWord: string, suffixes: string[]): [boolean, string] {
     let lenSuffixes = 0;
     suffixes.forEach(suffix => {
       lenSuffixes += suffix.length;
@@ -272,7 +164,7 @@ export default class Stemmer {
       0,
       originalWord.length - lenSuffixes
     );
-    // suffixes.forEach(function (char, i) {
+
     for (let i = 0; i < suffixes.length; i++) {
       let suffixCombination = "";
       for (let j = 0; j <= i; j++) {
@@ -303,7 +195,7 @@ export default class Stemmer {
    * @param word - The word to process.
    * @returns A tuple of [found, result]. `found` is true if a root was identified.
    */
-  removePrefixes(word: string): [boolean, string] {
+  private removePrefixes(word: string): [boolean, string] {
     const originalWord = word;
     let currentPrefix = "";
     let removedPrefix = "";
@@ -319,7 +211,7 @@ export default class Stemmer {
         break;
       }
 
-      const funcret = this.removePrefix(word);
+      const funcret = removePrefix(word);
       removedPrefix = funcret[0];
       word = funcret[1];
       recodingChar = funcret[2];
@@ -334,520 +226,5 @@ export default class Stemmer {
     }
 
     return [false, word];
-  }
-
-  /**
-   * Removes a single prefix from a word based on its type.
-   *
-   * Handles simple prefixes (di, ke, se, ku, kau) and delegates complex
-   * prefixes (me, pe, be, te) and infixes to specialized methods.
-   *
-   * @param word - The word to process.
-   * @returns A tuple of [prefix, result, recoding characters].
-   */
-  removePrefix(word: string): [string, string, string[]] {
-    let prefix = "";
-    let result = word;
-    let recoding: string[] = [];
-    let funcret;
-
-    if (
-      this.hasPrefix("di", word) ||
-      this.hasPrefix("ke", word) ||
-      this.hasPrefix("se", word) ||
-      this.hasPrefix("ku", word)
-    ) {
-      prefix = word.substring(0, 2);
-      result = word.substring(2, word.length);
-    } else if (this.hasPrefix("kau", word)) {
-      prefix = "kau";
-      result = word.substring(3, word.length);
-    } else if (this.hasPrefix("me", word)) {
-      prefix = "me";
-      funcret = this.removeMePrefix(word);
-      result = funcret[0];
-      recoding = funcret[1] || [];
-    } else if (this.hasPrefix("pe", word)) {
-      prefix = "pe";
-      funcret = this.removePePrefix(word);
-      result = funcret[0];
-      recoding = funcret[1] || [];
-    } else if (this.hasPrefix("be", word)) {
-      prefix = "be";
-      funcret = this.removeBePrefix(word);
-      result = funcret[0];
-      recoding = funcret[1] || [];
-    } else if (this.hasPrefix("te", word)) {
-      prefix = "te";
-      funcret = this.removeTePrefix(word);
-      result = funcret[0];
-      recoding = funcret[1] || [];
-    } else {
-      funcret = this.removeInfix(word);
-      result = funcret[0];
-      recoding = funcret[1] || [];
-    }
-    return [prefix, result, recoding];
-  }
-
-  /**
-   * Removes the me- prefix using pattern matching.
-   *
-   * Handles 10 patterns including me{l|r|w|y}V, mem{b|f|v}, men{c|d|j|s|t|z},
-   * meng{g|h|q|k}, mengV, menyV, mempV, etc.
-   *
-   * @param word - The word starting with "me".
-   * @returns A tuple of [result, recoding characters or null].
-   */
-  removeMePrefix(word: string): [string, string[] | null] {
-    const s3 = this.newChar(word, 2);
-    const s4 = this.newChar(word, 3);
-    const s5 = this.newChar(word, 4);
-
-    // Pattern 01
-    // me{l|r|w|y}V => me-{l|r|w|y}V
-    if (this.isOneOf(s3, "lrwy") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(2, word.length), null];
-    }
-
-    // Pattern 02
-    // mem{b|f|v} => mem-{b|f|v}
-    if (this.isOneOf(s3, "m") && this.isOneOf(s4, "bfv")) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 03
-    // mempe => mem-pe
-    if (
-      this.isOneOf(s3, "m") &&
-      this.isOneOf(s4, "p") &&
-      this.isOneOf(s5, "e")
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 04
-    // mem{rV|V} => mem-{rV|V} OR me-p{rV|V}
-    if (
-      this.isOneOf(s3, "m") &&
-      (this.isOneOf(s4, this.vowel) ||
-        (this.isOneOf(s4, "r") && this.isOneOf(s5, this.vowel)))
-    ) {
-      return [word.substring(3, word.length), ["m", "p"]];
-    }
-
-    // Pattern 05
-    // men{c|d|j|s|t|z} => men-{c|d|j|s|t|z}
-    if (this.isOneOf(s3, "n") && this.isOneOf(s4, "cdjstz")) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 06
-    // menV => nV OR tV
-    if (this.isOneOf(s3, "n") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(3, word.length), ["n", "t"]];
-    }
-
-    // Pattern 07
-    // meng{g|h|q|k} => meng-{g|h|q|k}
-    if (
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, "g") &&
-      this.isOneOf(s5, "ghqk")
-    ) {
-      return [word.substring(4, word.length), null];
-    }
-
-    // Pattern 08
-    // mengV => meng-V OR meng-kV OR me-ngV OR mengV- where V = 'e'
-    if (
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, "g") &&
-      this.isOneOf(s5, this.vowel)
-    ) {
-      if (this.isOneOf(s5, "e")) {
-        return [word.substring(5, word.length), null];
-      }
-
-      return [word.substring(4, word.length), ["ng", "k"]];
-    }
-
-    // Pattern 09
-    // menyV => meny-sV OR me-nyV to stem menyala
-    if (
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, "y") &&
-      this.isOneOf(s5, this.vowel)
-    ) {
-      if (this.isOneOf(s5, "a")) {
-        return [word.substring(2, word.length), null];
-      }
-
-      return ["s" + word.substring(4, word.length), null];
-    }
-
-    // Pattern 10
-    // mempV => mem-pV where V != 'e'
-    if (
-      this.isOneOf(s3, "m") &&
-      this.isOneOf(s4, "p") &&
-      this.isNotOneOf(s5, "e")
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    return [word, null];
-  }
-
-  /**
-   * Removes the pe- prefix using pattern matching.
-   *
-   * Handles 15 patterns including pe{w|y}V, perV, perCAP, pem{b|f|v},
-   * pen{c|d|j|s|t|z}, pengC, pengV, penyV, pelV, peCerV, peCP, etc.
-   *
-   * @param word - The word starting with "pe".
-   * @returns A tuple of [result, recoding characters or null].
-   */
-  removePePrefix(word: string): [string, string[] | null] {
-    const s3 = this.newChar(word, 2);
-    const s4 = this.newChar(word, 3);
-    const s5 = this.newChar(word, 4);
-    const s6 = this.newChar(word, 5);
-    const s7 = this.newChar(word, 6);
-    const s8 = this.newChar(word, 7);
-
-    // Pattern 01
-    // pe{w|y}V => pe-{w|y}V
-    if (this.isOneOf(s3, "wy") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(2, word.length), null];
-    }
-
-    // Pattern 02
-    // perV => per-V OR pe-rV
-    if (this.isOneOf(s3, "r") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(3, word.length), ["r"]];
-    }
-
-    // Pattern 03
-    // perCAP => per-CAP where C != 'r' and P != 'er'
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isNotOneOf(s5, "") &&
-      this.isNotOneOf(s6, "e")
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 4
-    // perCAerV => per-CAerV where C != 'r'
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isNotOneOf(s5, "") &&
-      this.isOneOf(s6, "e") &&
-      this.isOneOf(s7, "r") &&
-      this.isOneOf(s8, this.vowel)
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 05
-    // pem{b|f|v} => pem-{b|f|v}
-    if (this.isOneOf(s3, "m") && this.isOneOf(s4, "bfv")) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 06
-    // pem{rV|V} => pe-m{rV|V} OR pe-p{rV|V}
-    if (
-      this.isOneOf(s3, "m") &&
-      (this.isOneOf(s4, this.vowel) ||
-        (this.isOneOf(s4, "r") && this.isOneOf(s5, this.vowel)))
-    ) {
-      return [word.substring(3, word.length), ["m", "p"]];
-    }
-
-    // Pattern 07
-    // pen{c|d|j|s|t|z} => pen-{c|d|j|s|t|z}
-    if (this.isOneOf(s3, "n") && this.isOneOf(s4, "cdjstz")) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 08
-    // penV => pe-nV OR pe-tV
-    if (this.isOneOf(s3, "n") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(3, word.length), ["n", "t"]];
-    }
-
-    // Pattern 09
-    // pengC => peng-C
-    if (
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, "g") &&
-      this.isOneOf(s5, this.consonant)
-    ) {
-      return [word.substring(4, word.length), null];
-    }
-
-    // Pattern 10
-    // pengV => peng-V OR peng-kV OR pengV- where V = 'e'
-    if (
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, "g") &&
-      this.isOneOf(s5, this.vowel)
-    ) {
-      if (this.isOneOf(s5, "e")) {
-        return [word.substring(5, word.length), null];
-      }
-
-      return [word.substring(4, word.length), ["k"]];
-    }
-
-    // Pattern 11
-    // penyV => peny-sV OR pe-nyV
-    if (
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, "y") &&
-      this.isOneOf(s5, this.vowel)
-    ) {
-      return [word.substring(4, word.length), ["s", "ny"]];
-    }
-
-    // Pattern 12
-    // pelV => pe-lV OR pel-V for pelajar
-    if (this.isOneOf(s3, "l") && this.isOneOf(s4, this.vowel)) {
-      if (word === "pelajar") {
-        return ["ajar", null];
-      }
-
-      return [word.substring(2, word.length), null];
-    }
-
-    // Pattern 13
-    // peCerV => per-erV where C != {r|w|y|l|m|n}
-    if (
-      this.isOneOf(s3, this.consonant) &&
-      this.isNotOneOf(s3, "rwylmn") &&
-      this.isOneOf(s4, "e") &&
-      this.isOneOf(s5, "r") &&
-      this.isOneOf(s6, this.vowel)
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 14
-    // peCP => pe-CP where C != {r|w|y|l|m|n} and P != 'er'
-    if (
-      this.isOneOf(s3, this.consonant) &&
-      this.isNotOneOf(s3, "rwylmn") &&
-      this.isNotOneOf(s3, "e")
-    ) {
-      return [word.substring(2, word.length), null];
-    }
-
-    // Pattern 15
-    // peC1erC2 => pe-C1erC2 where C1 != {r|w|y|l|m|n}
-    if (
-      this.isOneOf(s3, this.consonant) &&
-      this.isNotOneOf(s3, "rwylmn") &&
-      this.isOneOf(s4, "e") &&
-      this.isOneOf(s5, "r") &&
-      this.isOneOf(s6, this.consonant)
-    ) {
-      return [word.substring(2, word.length), null];
-    }
-
-    return [word, null];
-  }
-
-  /**
-   * Removes the be- prefix using pattern matching.
-   *
-   * Handles 5 patterns including berV, berCAP, berCAerV, belajar (special),
-   * and beC1erC2.
-   *
-   * @param word - The word starting with "be".
-   * @returns A tuple of [result, recoding characters or null].
-   */
-  removeBePrefix(word: string): [string, string[] | null] {
-    const s3 = this.newChar(word, 2);
-    const s4 = this.newChar(word, 3);
-    const s5 = this.newChar(word, 4);
-    const s6 = this.newChar(word, 5);
-    const s7 = this.newChar(word, 6);
-    const s8 = this.newChar(word, 7);
-    // Pattern 01
-    // berV => ber-V OR be-rV
-    if (this.isOneOf(s3, "r") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(3, word.length), ["r"]];
-    }
-
-    // Pattern 02
-    // berCAP => ber-CAP
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isNotOneOf(s5, "") &&
-      this.isNotOneOf(s6, "e")
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 3
-    // berCAerV => ber-CAerV where C != 'r'
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isNotOneOf(s5, "") &&
-      this.isOneOf(s6, "e") &&
-      this.isOneOf(s7, "r") &&
-      this.isOneOf(s8, this.vowel)
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 04
-    // belajar => bel-ajar
-    if (word === "belajar") {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 5
-    // beC1erC2 => be-C1erC2 where C1 != {'r'|'l'}
-    if (
-      this.isOneOf(s3, this.consonant) &&
-      this.isNotOneOf(s3, "r") &&
-      this.isNotOneOf(s3, "l") &&
-      this.isOneOf(s4, "e") &&
-      this.isOneOf(s5, "r") &&
-      this.isOneOf(s6, this.consonant)
-    ) {
-      return [word.substring(2, word.length), null];
-    }
-    return [word, null];
-  }
-
-  /**
-   * Removes the te- prefix using pattern matching.
-   *
-   * Handles 5 patterns including terV, terCerV, terCP, teC1erC2,
-   * and terC1erC2.
-   *
-   * @param word - The word starting with "te".
-   * @returns A tuple of [result, recoding characters or null].
-   */
-  removeTePrefix(word: string): [string, string[] | null] {
-    const s3 = this.newChar(word, 2);
-    const s4 = this.newChar(word, 3);
-    const s5 = this.newChar(word, 4);
-    const s6 = this.newChar(word, 5);
-    const s7 = this.newChar(word, 6);
-
-    // Pattern 01
-    // terV => ter-V OR te-rV
-    if (this.isOneOf(s3, "r") && this.isOneOf(s4, this.vowel)) {
-      return [word.substring(3, word.length), ["r"]];
-    }
-
-    // Pattern 02
-    // terCerV => ter-CerV where C != 'r'
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isOneOf(s5, "e") &&
-      this.isOneOf(s6, "r") &&
-      this.isOneOf(s7, this.vowel)
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 3
-    // terCP => ter-CP where C != 'r' and P != 'er'
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isNotOneOf(s5, "e")
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    // Pattern 04
-    // teC1erC2 => te-C1erC2 where C1 != 'r'
-    if (
-      this.isOneOf(s3, this.consonant) &&
-      this.isNotOneOf(s3, "r") &&
-      this.isOneOf(s4, "e") &&
-      this.isOneOf(s5, "r") &&
-      this.isOneOf(s6, this.consonant)
-    ) {
-      return [word.substring(2, word.length), null];
-    }
-
-    // Pattern 05
-    // terC1erC2 => ter-C1erC2 where C1 != 'r'
-    if (
-      this.isOneOf(s3, "r") &&
-      this.isOneOf(s4, this.consonant) &&
-      this.isNotOneOf(s4, "r") &&
-      this.isOneOf(s5, "e") &&
-      this.isOneOf(s6, "r") &&
-      this.isOneOf(s7, this.consonant)
-    ) {
-      return [word.substring(3, word.length), null];
-    }
-
-    return [word, null];
-  }
-
-  /**
-   * Removes an infix (er-, el-, em-, en-) from a word.
-   *
-   * Handles 2 patterns: CerV (e.g., rerata → rata) and CinV (e.g., kinerja → kerja).
-   *
-   * @param word - The word to process.
-   * @returns A tuple of [result, recoding pair or null].
-   */
-  removeInfix(word: string): [string, [string, string] | null] {
-    const s1 = this.newChar(word, 0);
-    const s2 = this.newChar(word, 1);
-    const s3 = this.newChar(word, 2);
-    const s4 = this.newChar(word, 3);
-
-    // Pattern 01
-    // CerV => CerV OR CV
-    if (
-      this.isOneOf(s1, this.consonant) &&
-      this.isOneOf(s2, "e") &&
-      this.isOneOf(s3, "rlm") &&
-      this.isOneOf(s4, this.vowel)
-    ) {
-      return [
-        word.substring(3, word.length),
-        [word.substring(0, 3), word.substring(0, 1)],
-      ];
-    }
-
-    // Pattern 02
-    // CinV => CinV OR CV
-    if (
-      this.isOneOf(s1, this.consonant) &&
-      this.isOneOf(s2, "i") &&
-      this.isOneOf(s3, "n") &&
-      this.isOneOf(s4, this.vowel)
-    ) {
-      return [
-        word.substring(3, word.length),
-        [word.substring(0, 3), word.substring(0, 1)],
-      ];
-    }
-
-    return [word, null];
   }
 }
