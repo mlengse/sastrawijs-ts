@@ -226,8 +226,8 @@ export default class Stemmer {
    * @returns A tuple of [removed particle, word without particle].
    */
   removeParticle(word: string): [string, string] {
-    let result = word.replace(/-?(lah|kah|tah|pun)$/g, "");
-    let particle = word.replace(result, "");
+    const result = word.replace(/-?(lah|kah|tah|pun)$/g, "");
+    const particle = word.replace(result, "");
     return [particle, result];
   }
 
@@ -237,8 +237,8 @@ export default class Stemmer {
    * @returns A tuple of [removed possessive, word without possessive].
    */
   removePossessive(word: string): [string, string] {
-    let result = word.replace(/-?(ku|mu|nya)$/g, "");
-    let possessive = word.replace(result, "");
+    const result = word.replace(/-?(ku|mu|nya)$/g, "");
+    const possessive = word.replace(result, "");
     return [possessive, result];
   }
 
@@ -248,8 +248,8 @@ export default class Stemmer {
    * @returns A tuple of [removed suffix, word without suffix].
    */
   removeSuffix(word: string): [string, string] {
-    let result = word.replace(/-?(is|isme|isasi|i|kan|an)$/g, "");
-    let suffix = word.replace(result, "");
+    const result = word.replace(/-?(is|isme|isasi|i|kan|an)$/g, "");
+    const suffix = word.replace(result, "");
     return [suffix, result];
   }
 
@@ -268,7 +268,7 @@ export default class Stemmer {
     suffixes.forEach(suffix => {
       lenSuffixes += suffix.length;
     });
-    let wordWithoutSuffix = originalWord.substring(
+    const wordWithoutSuffix = originalWord.substring(
       0,
       originalWord.length - lenSuffixes
     );
@@ -284,8 +284,8 @@ export default class Stemmer {
         return [true, word];
       }
 
-      let funcret = this.removePrefixes(word);
-      let rootFound = funcret[0];
+      const funcret = this.removePrefixes(word);
+      const rootFound = funcret[0];
       word = funcret[1];
       if (rootFound) {
         return [true, word];
@@ -304,7 +304,7 @@ export default class Stemmer {
    * @returns A tuple of [found, result]. `found` is true if a root was identified.
    */
   removePrefixes(word: string): [boolean, string] {
-    let originalWord = word;
+    const originalWord = word;
     let currentPrefix = "";
     let removedPrefix = "";
     let recodingChar = [];
@@ -319,7 +319,7 @@ export default class Stemmer {
         break;
       }
 
-      let funcret = this.removePrefix(word);
+      const funcret = this.removePrefix(word);
       removedPrefix = funcret[0];
       word = funcret[1];
       recodingChar = funcret[2];
@@ -400,9 +400,9 @@ export default class Stemmer {
    * @returns A tuple of [result, recoding characters or null].
    */
   removeMePrefix(word: string): [string, string[] | null] {
-    let s3 = this.newChar(word, 2);
-    let s4 = this.newChar(word, 3);
-    let s5 = this.newChar(word, 4);
+    const s3 = this.newChar(word, 2);
+    const s4 = this.newChar(word, 3);
+    const s5 = this.newChar(word, 4);
 
     // Pattern 01
     // me{l|r|w|y}V => me-{l|r|w|y}V
@@ -509,12 +509,12 @@ export default class Stemmer {
    * @returns A tuple of [result, recoding characters or null].
    */
   removePePrefix(word: string): [string, string[] | null] {
-    let s3 = this.newChar(word, 2);
-    let s4 = this.newChar(word, 3);
-    let s5 = this.newChar(word, 4);
-    let s6 = this.newChar(word, 5);
-    let s7 = this.newChar(word, 6);
-    let s8 = this.newChar(word, 7);
+    const s3 = this.newChar(word, 2);
+    const s4 = this.newChar(word, 3);
+    const s5 = this.newChar(word, 4);
+    const s6 = this.newChar(word, 5);
+    const s7 = this.newChar(word, 6);
+    const s8 = this.newChar(word, 7);
 
     // Pattern 01
     // pe{w|y}V => pe-{w|y}V
@@ -673,12 +673,12 @@ export default class Stemmer {
    * @returns A tuple of [result, recoding characters or null].
    */
   removeBePrefix(word: string): [string, string[] | null] {
-    let s3 = this.newChar(word, 2);
-    let s4 = this.newChar(word, 3);
-    let s5 = this.newChar(word, 4);
-    let s6 = this.newChar(word, 5);
-    let s7 = this.newChar(word, 6);
-    let s8 = this.newChar(word, 7);
+    const s3 = this.newChar(word, 2);
+    const s4 = this.newChar(word, 3);
+    const s5 = this.newChar(word, 4);
+    const s6 = this.newChar(word, 5);
+    const s7 = this.newChar(word, 6);
+    const s8 = this.newChar(word, 7);
     // Pattern 01
     // berV => ber-V OR be-rV
     if (this.isOneOf(s3, "r") && this.isOneOf(s4, this.vowel)) {
@@ -742,11 +742,11 @@ export default class Stemmer {
    * @returns A tuple of [result, recoding characters or null].
    */
   removeTePrefix(word: string): [string, string[] | null] {
-    let s3 = this.newChar(word, 2);
-    let s4 = this.newChar(word, 3);
-    let s5 = this.newChar(word, 4);
-    let s6 = this.newChar(word, 5);
-    let s7 = this.newChar(word, 6);
+    const s3 = this.newChar(word, 2);
+    const s4 = this.newChar(word, 3);
+    const s5 = this.newChar(word, 4);
+    const s6 = this.newChar(word, 5);
+    const s7 = this.newChar(word, 6);
 
     // Pattern 01
     // terV => ter-V OR te-rV
@@ -815,10 +815,10 @@ export default class Stemmer {
    * @returns A tuple of [result, recoding pair or null].
    */
   removeInfix(word: string): [string, [string, string] | null] {
-    let s1 = this.newChar(word, 0);
-    let s2 = this.newChar(word, 1);
-    let s3 = this.newChar(word, 2);
-    let s4 = this.newChar(word, 3);
+    const s1 = this.newChar(word, 0);
+    const s2 = this.newChar(word, 1);
+    const s3 = this.newChar(word, 2);
+    const s4 = this.newChar(word, 3);
 
     // Pattern 01
     // CerV => CerV OR CV

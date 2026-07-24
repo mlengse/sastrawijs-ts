@@ -57,13 +57,13 @@ describe("Tokenizer", () => {
 
   describe("parseHtmlEntities", () => {
     it("decodes numeric HTML entities", () => {
-      expect(tokenizer.parseHtmlEntities("&#72;")).toEqual("H");
-      expect(tokenizer.parseHtmlEntities("&#104;")).toEqual("h");
-      expect(tokenizer.parseHtmlEntities("&#65;&#66;&#67;")).toEqual("ABC");
+      expect(tokenizer.parseHtmlEntities("&#72;")).toBe("H");
+      expect(tokenizer.parseHtmlEntities("&#104;")).toBe("h");
+      expect(tokenizer.parseHtmlEntities("&#65;&#66;&#67;")).toBe("ABC");
     });
 
     it("leaves non-entity text unchanged", () => {
-      expect(tokenizer.parseHtmlEntities("hello")).toEqual("hello");
+      expect(tokenizer.parseHtmlEntities("hello")).toBe("hello");
     });
   });
 });

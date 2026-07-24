@@ -24,295 +24,295 @@ describe("Stemmer", () => {
 
   describe("particle removal", () => {
     it("removes -lah particle", () => {
-      expect(stemmer.stem("hancurlah")).toEqual("hancur");
-      expect(stemmer.stem("kasihilah")).toEqual("kasih");
-      expect(stemmer.stem("allah-lah")).toEqual("allah");
+      expect(stemmer.stem("hancurlah")).toBe("hancur");
+      expect(stemmer.stem("kasihilah")).toBe("kasih");
+      expect(stemmer.stem("allah-lah")).toBe("allah");
     });
 
     it("removes -kah particle", () => {
-      expect(stemmer.stem("benarkah")).toEqual("benar");
+      expect(stemmer.stem("benarkah")).toBe("benar");
     });
 
     it("removes -tah particle", () => {
-      expect(stemmer.stem("apatah")).toEqual("apa");
+      expect(stemmer.stem("apatah")).toBe("apa");
     });
 
     it("removes -pun particle", () => {
-      expect(stemmer.stem("siapapun")).toEqual("siapa");
+      expect(stemmer.stem("siapapun")).toBe("siapa");
     });
   });
 
   describe("possessive removal", () => {
     it("removes -ku possessive", () => {
-      expect(stemmer.stem("jubahku")).toEqual("jubah");
-      expect(stemmer.stem("kulitkupun")).toEqual("kulit");
-      expect(stemmer.stem("berikanku")).toEqual("beri");
-      expect(stemmer.stem("nikmat-Ku")).toEqual("nikmat");
+      expect(stemmer.stem("jubahku")).toBe("jubah");
+      expect(stemmer.stem("kulitkupun")).toBe("kulit");
+      expect(stemmer.stem("berikanku")).toBe("beri");
+      expect(stemmer.stem("nikmat-Ku")).toBe("nikmat");
     });
 
     it("removes -mu possessive", () => {
-      expect(stemmer.stem("bajumu")).toEqual("baju");
-      expect(stemmer.stem("sakitimu")).toEqual("sakit");
-      expect(stemmer.stem("keberuntunganmu")).toEqual("untung");
+      expect(stemmer.stem("bajumu")).toBe("baju");
+      expect(stemmer.stem("sakitimu")).toBe("sakit");
+      expect(stemmer.stem("keberuntunganmu")).toBe("untung");
     });
 
     it("removes -nya possessive", () => {
-      expect(stemmer.stem("celananya")).toEqual("celana");
-      expect(stemmer.stem("beriannya")).toEqual("beri");
-      expect(stemmer.stem("miliknyalah")).toEqual("milik");
-      expect(stemmer.stem("pelakunyalah")).toEqual("laku");
-      expect(stemmer.stem("kebaikannya")).toEqual("baik");
-      expect(stemmer.stem("medannya")).toEqual("medan");
-      expect(stemmer.stem("menyatakannya")).toEqual("nyata");
+      expect(stemmer.stem("celananya")).toBe("celana");
+      expect(stemmer.stem("beriannya")).toBe("beri");
+      expect(stemmer.stem("miliknyalah")).toBe("milik");
+      expect(stemmer.stem("pelakunyalah")).toBe("laku");
+      expect(stemmer.stem("kebaikannya")).toBe("baik");
+      expect(stemmer.stem("medannya")).toBe("medan");
+      expect(stemmer.stem("menyatakannya")).toBe("nyata");
     });
   });
 
   describe("suffix removal", () => {
     it("removes -i suffix", () => {
-      expect(stemmer.stem("hantui")).toEqual("hantu");
-      expect(stemmer.stem("mencintai")).toEqual("cinta");
-      expect(stemmer.stem("menduakan")).toEqual("dua");
-      expect(stemmer.stem("menjauhi")).toEqual("jauh");
-      expect(stemmer.stem("menggilai")).toEqual("gila");
+      expect(stemmer.stem("hantui")).toBe("hantu");
+      expect(stemmer.stem("mencintai")).toBe("cinta");
+      expect(stemmer.stem("menduakan")).toBe("dua");
+      expect(stemmer.stem("menjauhi")).toBe("jauh");
+      expect(stemmer.stem("menggilai")).toBe("gila");
     });
 
     it("removes -kan suffix", () => {
-      expect(stemmer.stem("belikan")).toEqual("beli");
-      expect(stemmer.stem("bukumukah")).toEqual("buku");
-      expect(stemmer.stem("bisikan")).toEqual("bisik");
-      expect(stemmer.stem("terasingkan")).toEqual("asing");
-      expect(stemmer.stem("membangunkan")).toEqual("bangun");
-      expect(stemmer.stem("pelangganmukah")).toEqual("langgan");
-      expect(stemmer.stem("menyanyikan")).toEqual("nyanyi");
-      expect(stemmer.stem("mempromosikan")).toEqual("promosi");
-      expect(stemmer.stem("mensyaratkan")).toEqual("syarat");
+      expect(stemmer.stem("belikan")).toBe("beli");
+      expect(stemmer.stem("bukumukah")).toBe("buku");
+      expect(stemmer.stem("bisikan")).toBe("bisik");
+      expect(stemmer.stem("terasingkan")).toBe("asing");
+      expect(stemmer.stem("membangunkan")).toBe("bangun");
+      expect(stemmer.stem("pelangganmukah")).toBe("langgan");
+      expect(stemmer.stem("menyanyikan")).toBe("nyanyi");
+      expect(stemmer.stem("mempromosikan")).toBe("promosi");
+      expect(stemmer.stem("mensyaratkan")).toBe("syarat");
     });
 
     it("removes -an suffix", () => {
-      expect(stemmer.stem("jualan")).toEqual("jual");
-      expect(stemmer.stem("kesakitan")).toEqual("sakit");
-      expect(stemmer.stem("perbaikan")).toEqual("baik");
-      expect(stemmer.stem("bermakanan")).toEqual("makan");
-      expect(stemmer.stem("pembangunan")).toEqual("bangun");
-      expect(stemmer.stem("peranan")).toEqual("peran");
-      expect(stemmer.stem("penyawaan")).toEqual("nyawa");
-      expect(stemmer.stem("bertebaran")).toEqual("tebar");
+      expect(stemmer.stem("jualan")).toBe("jual");
+      expect(stemmer.stem("kesakitan")).toBe("sakit");
+      expect(stemmer.stem("perbaikan")).toBe("baik");
+      expect(stemmer.stem("bermakanan")).toBe("makan");
+      expect(stemmer.stem("pembangunan")).toBe("bangun");
+      expect(stemmer.stem("peranan")).toBe("peran");
+      expect(stemmer.stem("penyawaan")).toBe("nyawa");
+      expect(stemmer.stem("bertebaran")).toBe("tebar");
     });
   });
 
   describe("me- prefix", () => {
     it("me{l|r|w|y}V", () => {
-      expect(stemmer.stem("melipat")).toEqual("lipat");
+      expect(stemmer.stem("melipat")).toBe("lipat");
     });
 
     it("mem{b|f|v}", () => {
-      expect(stemmer.stem("membangun")).toEqual("bangun");
-      expect(stemmer.stem("memfitnah")).toEqual("fitnah");
-      expect(stemmer.stem("memvonis")).toEqual("vonis");
+      expect(stemmer.stem("membangun")).toBe("bangun");
+      expect(stemmer.stem("memfitnah")).toBe("fitnah");
+      expect(stemmer.stem("memvonis")).toBe("vonis");
     });
 
     it("mempe", () => {
-      expect(stemmer.stem("memperbaru")).toEqual("baru");
-      expect(stemmer.stem("mempelajar")).toEqual("ajar");
-      expect(stemmer.stem("mempopulerkan")).toEqual("populer");
-      expect(stemmer.stem("mempengaruhi")).toEqual("pengaruh");
-      expect(stemmer.stem("mempromosikan")).toEqual("promosi");
-      expect(stemmer.stem("memproteksi")).toEqual("proteksi");
-      expect(stemmer.stem("memprediksi")).toEqual("prediksi");
+      expect(stemmer.stem("memperbaru")).toBe("baru");
+      expect(stemmer.stem("mempelajar")).toBe("ajar");
+      expect(stemmer.stem("mempopulerkan")).toBe("populer");
+      expect(stemmer.stem("mempengaruhi")).toBe("pengaruh");
+      expect(stemmer.stem("mempromosikan")).toBe("promosi");
+      expect(stemmer.stem("memproteksi")).toBe("proteksi");
+      expect(stemmer.stem("memprediksi")).toBe("prediksi");
     });
 
     it("mem{rV|V}", () => {
-      expect(stemmer.stem("meminum")).toEqual("minum");
-      expect(stemmer.stem("memukul")).toEqual("pukul");
-      expect(stemmer.stem("memuaskan")).toEqual("puas");
+      expect(stemmer.stem("meminum")).toBe("minum");
+      expect(stemmer.stem("memukul")).toBe("pukul");
+      expect(stemmer.stem("memuaskan")).toBe("puas");
     });
 
     it("men{c|d|j|s|t|z}", () => {
-      expect(stemmer.stem("mencinta")).toEqual("cinta");
-      expect(stemmer.stem("mendua")).toEqual("dua");
-      expect(stemmer.stem("menjauh")).toEqual("jauh");
-      expect(stemmer.stem("menziarah")).toEqual("ziarah");
-      expect(stemmer.stem("menuklir")).toEqual("nuklir");
-      expect(stemmer.stem("menangkap")).toEqual("tangkap");
+      expect(stemmer.stem("mencinta")).toBe("cinta");
+      expect(stemmer.stem("mendua")).toBe("dua");
+      expect(stemmer.stem("menjauh")).toBe("jauh");
+      expect(stemmer.stem("menziarah")).toBe("ziarah");
+      expect(stemmer.stem("menuklir")).toBe("nuklir");
+      expect(stemmer.stem("menangkap")).toBe("tangkap");
     });
 
     it("menV", () => {
-      expect(stemmer.stem("menahan")).toEqual("tahan");
+      expect(stemmer.stem("menahan")).toBe("tahan");
     });
 
     it("meng{g|h|q|k}", () => {
-      expect(stemmer.stem("menggila")).toEqual("gila");
-      expect(stemmer.stem("menghajar")).toEqual("hajar");
-      expect(stemmer.stem("mengqasar")).toEqual("qasar");
-      expect(stemmer.stem("mengupas")).toEqual("kupas");
-      expect(stemmer.stem("mengkritik")).toEqual("kritik");
-      expect(stemmer.stem("mengudara")).toEqual("udara");
+      expect(stemmer.stem("menggila")).toBe("gila");
+      expect(stemmer.stem("menghajar")).toBe("hajar");
+      expect(stemmer.stem("mengqasar")).toBe("qasar");
+      expect(stemmer.stem("mengupas")).toBe("kupas");
+      expect(stemmer.stem("mengkritik")).toBe("kritik");
+      expect(stemmer.stem("mengudara")).toBe("udara");
     });
 
     it("mengV", () => {
-      expect(stemmer.stem("menganga")).toEqual("nganga");
+      expect(stemmer.stem("menganga")).toBe("nganga");
     });
 
     it("menyV", () => {
-      expect(stemmer.stem("menyala")).toEqual("nyala");
-      expect(stemmer.stem("menyanyikan")).toEqual("nyanyi");
-      expect(stemmer.stem("menyatakannya")).toEqual("nyata");
-      expect(stemmer.stem("menyuarakan")).toEqual("suara");
-      expect(stemmer.stem("mensyukuri")).toEqual("syukur");
+      expect(stemmer.stem("menyala")).toBe("nyala");
+      expect(stemmer.stem("menyanyikan")).toBe("nyanyi");
+      expect(stemmer.stem("menyatakannya")).toBe("nyata");
+      expect(stemmer.stem("menyuarakan")).toBe("suara");
+      expect(stemmer.stem("mensyukuri")).toBe("syukur");
     });
 
     it("mempV", () => {
-      expect(stemmer.stem("mewarnai")).toEqual("warna");
-      expect(stemmer.stem("meyakinkan")).toEqual("yakin");
+      expect(stemmer.stem("mewarnai")).toBe("warna");
+      expect(stemmer.stem("meyakinkan")).toBe("yakin");
     });
   });
 
   describe("pe- prefix", () => {
     it("pe{w|y}V", () => {
-      expect(stemmer.stem("pewarna")).toEqual("warna");
-      expect(stemmer.stem("peyoga")).toEqual("yoga");
+      expect(stemmer.stem("pewarna")).toBe("warna");
+      expect(stemmer.stem("peyoga")).toBe("yoga");
     });
 
     it("perV", () => {
-      expect(stemmer.stem("peradilan")).toEqual("adil");
-      expect(stemmer.stem("perumahan")).toEqual("rumah");
-      expect(stemmer.stem("permuka")).toEqual("muka");
-      expect(stemmer.stem("perdaerah")).toEqual("daerah");
+      expect(stemmer.stem("peradilan")).toBe("adil");
+      expect(stemmer.stem("perumahan")).toBe("rumah");
+      expect(stemmer.stem("permuka")).toBe("muka");
+      expect(stemmer.stem("perdaerah")).toBe("daerah");
     });
 
     it("pem{b|f|v}", () => {
-      expect(stemmer.stem("pembangun")).toEqual("bangun");
-      expect(stemmer.stem("pemfitnah")).toEqual("fitnah");
-      expect(stemmer.stem("pemvonis")).toEqual("vonis");
-      expect(stemmer.stem("peminum")).toEqual("minum");
-      expect(stemmer.stem("pemukul")).toEqual("pukul");
+      expect(stemmer.stem("pembangun")).toBe("bangun");
+      expect(stemmer.stem("pemfitnah")).toBe("fitnah");
+      expect(stemmer.stem("pemvonis")).toBe("vonis");
+      expect(stemmer.stem("peminum")).toBe("minum");
+      expect(stemmer.stem("pemukul")).toBe("pukul");
     });
 
     it("pen{c|d|j|s|t|z}", () => {
-      expect(stemmer.stem("pencinta")).toEqual("cinta");
-      expect(stemmer.stem("pendua")).toEqual("dua");
-      expect(stemmer.stem("penjauh")).toEqual("jauh");
-      expect(stemmer.stem("penziarah")).toEqual("ziarah");
-      expect(stemmer.stem("penuklir")).toEqual("nuklir");
-      expect(stemmer.stem("penangkap")).toEqual("tangkap");
+      expect(stemmer.stem("pencinta")).toBe("cinta");
+      expect(stemmer.stem("pendua")).toBe("dua");
+      expect(stemmer.stem("penjauh")).toBe("jauh");
+      expect(stemmer.stem("penziarah")).toBe("ziarah");
+      expect(stemmer.stem("penuklir")).toBe("nuklir");
+      expect(stemmer.stem("penangkap")).toBe("tangkap");
     });
 
     it("penV", () => {
-      expect(stemmer.stem("penyuara")).toEqual("suara");
+      expect(stemmer.stem("penyuara")).toBe("suara");
     });
 
     it("pengC", () => {
-      expect(stemmer.stem("penggila")).toEqual("gila");
-      expect(stemmer.stem("penghajar")).toEqual("hajar");
-      expect(stemmer.stem("pengqasar")).toEqual("qasar");
-      expect(stemmer.stem("pengudara")).toEqual("udara");
-      expect(stemmer.stem("pengupas")).toEqual("kupas");
-      expect(stemmer.stem("pengkajian")).toEqual("kaji");
-      expect(stemmer.stem("pengebom")).toEqual("bom");
+      expect(stemmer.stem("penggila")).toBe("gila");
+      expect(stemmer.stem("penghajar")).toBe("hajar");
+      expect(stemmer.stem("pengqasar")).toBe("qasar");
+      expect(stemmer.stem("pengudara")).toBe("udara");
+      expect(stemmer.stem("pengupas")).toBe("kupas");
+      expect(stemmer.stem("pengkajian")).toBe("kaji");
+      expect(stemmer.stem("pengebom")).toBe("bom");
     });
 
     it("pelV", () => {
-      expect(stemmer.stem("pelajar")).toEqual("ajar");
-      expect(stemmer.stem("pelabuh")).toEqual("labuh");
+      expect(stemmer.stem("pelajar")).toBe("ajar");
+      expect(stemmer.stem("pelabuh")).toBe("labuh");
     });
 
     it("peCerV", () => {
-      expect(stemmer.stem("pekerja")).toEqual("kerja");
+      expect(stemmer.stem("pekerja")).toBe("kerja");
     });
 
     it("peC1erC2", () => {
-      expect(stemmer.stem("peserta")).toEqual("serta");
+      expect(stemmer.stem("peserta")).toBe("serta");
     });
 
     it("peCP", () => {
-      expect(stemmer.stem("petarung")).toEqual("tarung");
+      expect(stemmer.stem("petarung")).toBe("tarung");
     });
 
     it("pelanggan and pelaku", () => {
-      expect(stemmer.stem("pelanggan")).toEqual("langgan");
-      expect(stemmer.stem("pelaku")).toEqual("laku");
+      expect(stemmer.stem("pelanggan")).toBe("langgan");
+      expect(stemmer.stem("pelaku")).toBe("laku");
     });
   });
 
   describe("be- prefix", () => {
     it("berV", () => {
-      expect(stemmer.stem("beradu")).toEqual("adu");
-      expect(stemmer.stem("berambut")).toEqual("rambut");
-      expect(stemmer.stem("bersuara")).toEqual("suara");
-      expect(stemmer.stem("berdaerah")).toEqual("daerah");
+      expect(stemmer.stem("beradu")).toBe("adu");
+      expect(stemmer.stem("berambut")).toBe("rambut");
+      expect(stemmer.stem("bersuara")).toBe("suara");
+      expect(stemmer.stem("berdaerah")).toBe("daerah");
     });
 
     it("belajar", () => {
-      expect(stemmer.stem("belajar")).toEqual("ajar");
+      expect(stemmer.stem("belajar")).toBe("ajar");
     });
 
     it("berCAP", () => {
-      expect(stemmer.stem("bekerja")).toEqual("kerja");
-      expect(stemmer.stem("beternak")).toEqual("ternak");
+      expect(stemmer.stem("bekerja")).toBe("kerja");
+      expect(stemmer.stem("beternak")).toBe("ternak");
     });
 
     it("berC1erC2", () => {
-      expect(stemmer.stem("bersekolah")).toEqual("sekolah");
-      expect(stemmer.stem("bertahan")).toEqual("tahan");
+      expect(stemmer.stem("bersekolah")).toBe("sekolah");
+      expect(stemmer.stem("bertahan")).toBe("tahan");
     });
   });
 
   describe("te- prefix", () => {
     it("terV", () => {
-      expect(stemmer.stem("terasing")).toEqual("asing");
-      expect(stemmer.stem("teraup")).toEqual("raup");
-      expect(stemmer.stem("tergerak")).toEqual("gerak");
-      expect(stemmer.stem("terpuruk")).toEqual("puruk");
+      expect(stemmer.stem("terasing")).toBe("asing");
+      expect(stemmer.stem("teraup")).toBe("raup");
+      expect(stemmer.stem("tergerak")).toBe("gerak");
+      expect(stemmer.stem("terpuruk")).toBe("puruk");
     });
 
     it("terCP", () => {
-      expect(stemmer.stem("terpercaya")).toEqual("percaya");
+      expect(stemmer.stem("terpercaya")).toBe("percaya");
     });
   });
 
   describe("infix removal", () => {
     it("rerata (CerV)", () => {
-      expect(stemmer.stem("rerata")).toEqual("rata");
+      expect(stemmer.stem("rerata")).toBe("rata");
     });
 
     it("lelembut (CerV)", () => {
-      expect(stemmer.stem("lelembut")).toEqual("lembut");
+      expect(stemmer.stem("lelembut")).toBe("lembut");
     });
 
     it("lemigas (CerV)", () => {
-      expect(stemmer.stem("lemigas")).toEqual("ligas");
+      expect(stemmer.stem("lemigas")).toBe("ligas");
     });
 
     it("kinerja (CinV)", () => {
-      expect(stemmer.stem("kinerja")).toEqual("kerja");
+      expect(stemmer.stem("kinerja")).toBe("kerja");
     });
   });
 
   describe("combined affixes", () => {
     it("prefix + suffix combinations", () => {
-      expect(stemmer.stem("meringkas")).toEqual("ringkas");
-      expect(stemmer.stem("bersembunyi")).toEqual("sembunyi");
-      expect(stemmer.stem("bersembunyilah")).toEqual("sembunyi");
-      expect(stemmer.stem("membangunkan")).toEqual("bangun");
-      expect(stemmer.stem("terasingkan")).toEqual("asing");
-      expect(stemmer.stem("bertebaran")).toEqual("tebar");
+      expect(stemmer.stem("meringkas")).toBe("ringkas");
+      expect(stemmer.stem("bersembunyi")).toBe("sembunyi");
+      expect(stemmer.stem("bersembunyilah")).toBe("sembunyi");
+      expect(stemmer.stem("membangunkan")).toBe("bangun");
+      expect(stemmer.stem("terasingkan")).toBe("asing");
+      expect(stemmer.stem("bertebaran")).toBe("tebar");
     });
 
     it("kau- prefix", () => {
-      expect(stemmer.stem("kupukul")).toEqual("pukul");
-      expect(stemmer.stem("kauhajar")).toEqual("hajar");
+      expect(stemmer.stem("kupukul")).toBe("pukul");
+      expect(stemmer.stem("kauhajar")).toBe("hajar");
     });
 
     it("ku- prefix", () => {
-      expect(stemmer.stem("kuasa-Mu")).toEqual("kuasa");
+      expect(stemmer.stem("kuasa-Mu")).toBe("kuasa");
     });
 
     it("complex combinations", () => {
-      expect(stemmer.stem("mencapai")).toEqual("capai");
-      expect(stemmer.stem("dimulai")).toEqual("mulai");
-      expect(stemmer.stem("memberdayakan")).toEqual("daya");
-      expect(stemmer.stem("persemakmuran")).toEqual("makmur");
-      expect(stemmer.stem("kesepersepuluhnya")).toEqual("sepuluh");
+      expect(stemmer.stem("mencapai")).toBe("capai");
+      expect(stemmer.stem("dimulai")).toBe("mulai");
+      expect(stemmer.stem("memberdayakan")).toBe("daya");
+      expect(stemmer.stem("persemakmuran")).toBe("makmur");
+      expect(stemmer.stem("kesepersepuluhnya")).toBe("sepuluh");
     });
   });
 
@@ -320,73 +320,73 @@ describe("Stemmer", () => {
     it("stems with custom dictionary", () => {
       const custom = new Stemmer(["lari", "tulis"]);
       custom.addToDict(["cepat"]);
-      expect(custom.stem("berlari")).toEqual("lari");
-      expect(custom.stem("menulis")).toEqual("tulis");
-      expect(custom.stem("bercepatan")).toEqual("cepat");
+      expect(custom.stem("berlari")).toBe("lari");
+      expect(custom.stem("menulis")).toBe("tulis");
+      expect(custom.stem("bercepatan")).toBe("cepat");
     });
 
     it("removes from dictionary", () => {
       const custom = new Stemmer(["lari", "tulis"]);
       custom.remove(["lari"]);
-      expect(custom.stem("berlari")).toEqual("berlari");
+      expect(custom.stem("berlari")).toBe("berlari");
     });
   });
 
   describe("edge cases", () => {
     it("returns short words as-is", () => {
-      expect(stemmer.stem("mei")).toEqual("mei");
-      expect(stemmer.stem("bui")).toEqual("bui");
+      expect(stemmer.stem("mei")).toBe("mei");
+      expect(stemmer.stem("bui")).toBe("bui");
     });
 
     it("returns unknown words as-is", () => {
-      expect(stemmer.stem("marwan")).toEqual("marwan");
-      expect(stemmer.stem("subarkah")).toEqual("subarkah");
+      expect(stemmer.stem("marwan")).toBe("marwan");
+      expect(stemmer.stem("subarkah")).toBe("subarkah");
     });
 
     it("handles case insensitivity", () => {
-      expect(stemmer.stem("Perekonomian")).toEqual("ekonomi");
+      expect(stemmer.stem("Perekonomian")).toBe("ekonomi");
     });
 
     it("returns empty string for non-string input", () => {
-      expect(stemmer.stem(null as unknown as string)).toEqual("");
-      expect(stemmer.stem(undefined as unknown as string)).toEqual("");
-      expect(stemmer.stem(123 as unknown as string)).toEqual("");
+      expect(stemmer.stem(null as unknown as string)).toBe("");
+      expect(stemmer.stem(undefined as unknown as string)).toBe("");
+      expect(stemmer.stem(123 as unknown as string)).toBe("");
     });
 
     it("returns empty string for empty string", () => {
-      expect(stemmer.stem("")).toEqual("");
+      expect(stemmer.stem("")).toBe("");
     });
 
     it("returns single character as-is", () => {
-      expect(stemmer.stem("a")).toEqual("a");
+      expect(stemmer.stem("a")).toBe("a");
     });
 
     it("returns two character word as-is", () => {
-      expect(stemmer.stem("ab")).toEqual("ab");
+      expect(stemmer.stem("ab")).toBe("ab");
     });
 
     it("handles words in dictionary directly", () => {
-      expect(stemmer.stem("nilai")).toEqual("nilai");
-      expect(stemmer.stem("hancur")).toEqual("hancur");
+      expect(stemmer.stem("nilai")).toBe("nilai");
+      expect(stemmer.stem("hancur")).toBe("hancur");
     });
   });
 
   describe("additional stems", () => {
     it("prefix-only removals", () => {
-      expect(stemmer.stem("menerangi")).toEqual("terang");
-      expect(stemmer.stem("berimanlah")).toEqual("iman");
-      expect(stemmer.stem("berpelanggan")).toEqual("langgan");
-      expect(stemmer.stem("terabai")).toEqual("abai");
-      expect(stemmer.stem("mengebom")).toEqual("bom");
+      expect(stemmer.stem("menerangi")).toBe("terang");
+      expect(stemmer.stem("berimanlah")).toBe("iman");
+      expect(stemmer.stem("berpelanggan")).toBe("langgan");
+      expect(stemmer.stem("terabai")).toBe("abai");
+      expect(stemmer.stem("mengebom")).toBe("bom");
     });
 
     it("suffix + prefix combinations", () => {
-      expect(stemmer.stem("petani")).toEqual("tani");
-      expect(stemmer.stem("finalisasi")).toEqual("final");
-      expect(stemmer.stem("idealis")).toEqual("ideal");
-      expect(stemmer.stem("idealisme")).toEqual("ideal");
-      expect(stemmer.stem("mentaati")).toEqual("taat");
-      expect(stemmer.stem("melewati")).toEqual("lewat");
+      expect(stemmer.stem("petani")).toBe("tani");
+      expect(stemmer.stem("finalisasi")).toBe("final");
+      expect(stemmer.stem("idealis")).toBe("ideal");
+      expect(stemmer.stem("idealisme")).toBe("ideal");
+      expect(stemmer.stem("mentaati")).toBe("taat");
+      expect(stemmer.stem("melewati")).toBe("lewat");
     });
   });
 });

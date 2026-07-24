@@ -58,7 +58,7 @@ export default class Tokenizer {
     sent = sent
       .trim()
       .replace(/&nbsp;/g, "")
-      .replace(/<[^\/>][^>]*><\/[^>]+>/g, "");
+      .replace(/<[^/>][^>]*><\/[^>]+>/g, "");
     return sent.split(/\s+/);
   }
 }
