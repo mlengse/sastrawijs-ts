@@ -1,49 +1,111 @@
 import defaultDictionary from "./dictionary";
 
+/**
+ * Result of removing an affix (suffix, particle, or possessive) from a word.
+ */
 export interface AffixRemovalResult {
+  /** The affix that was removed. */
   removed: string;
+  /** The word after affix removal. */
   word: string;
 }
 
+/**
+ * Result of removing a prefix from a word.
+ */
 export interface PrefixRemovalResult {
+  /** The prefix that was removed. */
   removed: string;
+  /** The word after prefix removal. */
   word: string;
+  /** Characters to recode when the root is not found directly. */
   recoding: string[] | null;
 }
 
+/**
+ * Indonesian language stemmer based on the Sastrawi algorithm.
+ *
+ * Reduces inflected words to their base form (stem) by removing prefixes,
+ * suffixes, particles, and possessive markers.
+ *
+ * @example
+ * ```ts
+ * import { Stemmer } from "sastrawijs";
+ *
+ * const stemmer = new Stemmer();
+ * stemmer.stem("berlari");  // "lari"
+ * stemmer.stem("pembelajaran"); // "ajar"
+ * ```
+ */
 export default class Stemmer {
+  /** The internal dictionary used for root word lookup. */
   public internalDictionary: Set<string>;
+  /** Vowel characters used in affix removal patterns. */
   public vowel: string;
+  /** Consonant characters used in affix removal patterns. */
   public consonant: string;
 
+  /**
+   * Creates a new Stemmer instance.
+   * @param dictionary - Array of root words. Defaults to the built-in KBBI dictionary.
+   */
   constructor(dictionary: string[] = defaultDictionary) {
     this.internalDictionary = new Set(dictionary);
     this.vowel = "aiueo";
     this.consonant = "bcdfghjklmnpqrstvwxyz";
   }
 
+  /**
+   * Adds words to the internal dictionary.
+   * @param words - Array of words to add.
+   */
   addToDict(words: string[]): void {
     if (!Array.isArray(words)) return;
     words.forEach(word => this.internalDictionary.add(word));
   }
 
+  /**
+   * Removes words from the internal dictionary.
+   * @param words - Array of words to remove.
+   */
   remove(words: string[]): void {
     if (!Array.isArray(words)) return;
     words.forEach(word => this.internalDictionary.delete(word));
   }
 
+  /**
+   * Checks if a string starts with a given prefix.
+   * @param needle - The prefix to check for.
+   * @param haystack - The string to search in.
+   * @returns `true` if haystack starts with needle.
+   */
   hasPrefix(needle: string, haystack: string): boolean {
     return haystack.startsWith(needle);
   }
 
+  /**
+   * Checks if a word exists in the internal dictionary.
+   * @param word - The word to look up.
+   * @returns `true` if the word is in the dictionary.
+   */
   find(word: string): boolean {
     return this.internalDictionary.has(word);
   }
 
+  /**
+   * Returns the internal dictionary as a Set.
+   * @returns The full dictionary Set.
+   */
   print(): Set<string> {
     return this.internalDictionary;
   }
 
+  /**
+   * Safely retrieves a character from a word by index.
+   * @param word - The word to get a character from.
+   * @param index - The character index.
+   * @returns The character at the index, or an empty string if out of bounds.
+   */
   newChar(word: string, index: number): string {
     if (index >= word.length) {
       return "";
@@ -51,11 +113,23 @@ export default class Stemmer {
     return word[index];
   }
 
+  /**
+   * Checks if a character is one of the given characters.
+   * @param c - Single character to check.
+   * @param chars - String of characters to match against.
+   * @returns `true` if c is found in chars.
+   */
   isOneOf(c: string, chars: string): boolean {
     if (c.length !== 1) return false;
     return chars.indexOf(c) !== -1;
   }
 
+  /**
+   * Checks if a character is NOT one of the given characters.
+   * @param c - Single character to check.
+   * @param chars - String of characters to match against.
+   * @returns `true` if c is NOT found in chars.
+   */
   isNotOneOf(c: string, chars: string): boolean {
     return !this.isOneOf(c, chars);
   }
@@ -109,6 +183,22 @@ export default class Stemmer {
     return null;
   }
 
+  /**
+   * Stems an Indonesian word to its base form.
+   *
+   * Removes affixes (prefixes, suffixes, particles, possessive markers)
+   * and returns the root word. If no stem is found, returns the original word.
+   *
+   * @param word - The inflected word to stem.
+   * @returns The stemmed (root) word, or an empty string if input is not a string.
+   *
+   * @example
+   * ```ts
+   * stemmer.stem("berlari");     // "lari"
+   * stemmer.stem("pembelajaran"); // "ajar"
+   * stemmer.stem("hancurlah");   // "hancur"
+   * ```
+   */
   stem(word: string): string {
     if (typeof word !== "string") return "";
     word = word.toLowerCase();
@@ -130,24 +220,49 @@ export default class Stemmer {
     return originalWord;
   }
 
+  /**
+   * Removes a particle suffix (-lah, -kah, -tah, -pun) from a word.
+   * @param word - The word to process.
+   * @returns A tuple of [removed particle, word without particle].
+   */
   removeParticle(word: string): [string, string] {
     let result = word.replace(/-?(lah|kah|tah|pun)$/g, "");
     let particle = word.replace(result, "");
     return [particle, result];
   }
 
+  /**
+   * Removes a possessive suffix (-ku, -mu, -nya) from a word.
+   * @param word - The word to process.
+   * @returns A tuple of [removed possessive, word without possessive].
+   */
   removePossessive(word: string): [string, string] {
     let result = word.replace(/-?(ku|mu|nya)$/g, "");
     let possessive = word.replace(result, "");
     return [possessive, result];
   }
 
+  /**
+   * Removes a suffix (-is, -isme, -isasi, -i, -kan, -an) from a word.
+   * @param word - The word to process.
+   * @returns A tuple of [removed suffix, word without suffix].
+   */
   removeSuffix(word: string): [string, string] {
     let result = word.replace(/-?(is|isme|isasi|i|kan|an)$/g, "");
     let suffix = word.replace(result, "");
     return [suffix, result];
   }
 
+  /**
+   * Tries suffix combinations to find the root word when normal removal fails.
+   *
+   * Iteratively reconstructs the word with varying suffix combinations
+   * and checks each against the dictionary.
+   *
+   * @param originalWord - The original inflected word.
+   * @param suffixes - The suffix parts that were removed.
+   * @returns A tuple of [found, root word]. `found` is true if a root was identified.
+   */
   lastReturnLoop(originalWord: string, suffixes: string[]): [boolean, string] {
     let lenSuffixes = 0;
     suffixes.forEach(suffix => {
@@ -179,6 +294,15 @@ export default class Stemmer {
     return [false, originalWord];
   }
 
+  /**
+   * Iteratively removes prefixes from a word (up to 3 rounds).
+   *
+   * After each prefix removal, checks the dictionary and tries recoding.
+   * Stops when the root is found or no more prefixes can be removed.
+   *
+   * @param word - The word to process.
+   * @returns A tuple of [found, result]. `found` is true if a root was identified.
+   */
   removePrefixes(word: string): [boolean, string] {
     let originalWord = word;
     let currentPrefix = "";
@@ -212,6 +336,15 @@ export default class Stemmer {
     return [false, word];
   }
 
+  /**
+   * Removes a single prefix from a word based on its type.
+   *
+   * Handles simple prefixes (di, ke, se, ku, kau) and delegates complex
+   * prefixes (me, pe, be, te) and infixes to specialized methods.
+   *
+   * @param word - The word to process.
+   * @returns A tuple of [prefix, result, recoding characters].
+   */
   removePrefix(word: string): [string, string, string[]] {
     let prefix = "";
     let result = word;
@@ -257,6 +390,15 @@ export default class Stemmer {
     return [prefix, result, recoding];
   }
 
+  /**
+   * Removes the me- prefix using pattern matching.
+   *
+   * Handles 10 patterns including me{l|r|w|y}V, mem{b|f|v}, men{c|d|j|s|t|z},
+   * meng{g|h|q|k}, mengV, menyV, mempV, etc.
+   *
+   * @param word - The word starting with "me".
+   * @returns A tuple of [result, recoding characters or null].
+   */
   removeMePrefix(word: string): [string, string[] | null] {
     let s3 = this.newChar(word, 2);
     let s4 = this.newChar(word, 3);
@@ -357,6 +499,15 @@ export default class Stemmer {
     return [word, null];
   }
 
+  /**
+   * Removes the pe- prefix using pattern matching.
+   *
+   * Handles 15 patterns including pe{w|y}V, perV, perCAP, pem{b|f|v},
+   * pen{c|d|j|s|t|z}, pengC, pengV, penyV, pelV, peCerV, peCP, etc.
+   *
+   * @param word - The word starting with "pe".
+   * @returns A tuple of [result, recoding characters or null].
+   */
   removePePrefix(word: string): [string, string[] | null] {
     let s3 = this.newChar(word, 2);
     let s4 = this.newChar(word, 3);
@@ -512,6 +663,15 @@ export default class Stemmer {
     return [word, null];
   }
 
+  /**
+   * Removes the be- prefix using pattern matching.
+   *
+   * Handles 5 patterns including berV, berCAP, berCAerV, belajar (special),
+   * and beC1erC2.
+   *
+   * @param word - The word starting with "be".
+   * @returns A tuple of [result, recoding characters or null].
+   */
   removeBePrefix(word: string): [string, string[] | null] {
     let s3 = this.newChar(word, 2);
     let s4 = this.newChar(word, 3);
@@ -572,6 +732,15 @@ export default class Stemmer {
     return [word, null];
   }
 
+  /**
+   * Removes the te- prefix using pattern matching.
+   *
+   * Handles 5 patterns including terV, terCerV, terCP, teC1erC2,
+   * and terC1erC2.
+   *
+   * @param word - The word starting with "te".
+   * @returns A tuple of [result, recoding characters or null].
+   */
   removeTePrefix(word: string): [string, string[] | null] {
     let s3 = this.newChar(word, 2);
     let s4 = this.newChar(word, 3);
@@ -637,6 +806,14 @@ export default class Stemmer {
     return [word, null];
   }
 
+  /**
+   * Removes an infix (er-, el-, em-, en-) from a word.
+   *
+   * Handles 2 patterns: CerV (e.g., rerata → rata) and CinV (e.g., kinerja → kerja).
+   *
+   * @param word - The word to process.
+   * @returns A tuple of [result, recoding pair or null].
+   */
   removeInfix(word: string): [string, [string, string] | null] {
     let s1 = this.newChar(word, 0);
     let s2 = this.newChar(word, 1);
