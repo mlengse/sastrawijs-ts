@@ -1,4 +1,4 @@
-import defaultDictionary from "./dictionary";
+import defaultDictionary from "./dictionary.json";
 
 /**
  * Result of removing an affix (suffix, particle, or possessive) from a word.

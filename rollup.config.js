@@ -1,4 +1,5 @@
 import babel from "@rollup/plugin-babel";
+import json from "@rollup/plugin-json";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import { readFileSync } from "fs";
@@ -23,6 +24,7 @@ export default {
     },
   ],
   plugins: [
+    json(),
     babel({ babelHelpers: "bundled" }),
     terser(),
     typescript({ tsconfig: "./tsconfig.json" }),

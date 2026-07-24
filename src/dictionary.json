@@ -1,4 +1,4 @@
-export default [
+[
   "aba",
   "abad",
   "abadi",
@@ -29929,5 +29929,5 @@ export default [
   "zulu",
   "zurafah",
   "zuriah",
-  "zus",
-];
+  "zus"
+]
