@@ -6,7 +6,7 @@ import eslintPluginJest from "eslint-plugin-jest";
 export default tseslint.config(
   // Global ignores
   {
-    ignores: ["dist/**", "node_modules/**"],
+    ignores: ["dist/**", "node_modules/**", "scripts/**"],
   },
 
   // Base recommended rules

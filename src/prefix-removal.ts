@@ -1,4 +1,11 @@
-import { newChar, isOneOf, isNotOneOf, hasPrefix, VOWEL, CONSONANT } from "./utils";
+import {
+  newChar,
+  isOneOf,
+  isNotOneOf,
+  hasPrefix,
+  VOWEL,
+  CONSONANT,
+} from "./utils";
 
 /**
  * Removes the me- prefix using pattern matching.
@@ -28,11 +35,7 @@ export function removeMePrefix(word: string): [string, string[] | null] {
 
   // Pattern 03
   // mempe => mem-pe
-  if (
-    isOneOf(s3, "m") &&
-    isOneOf(s4, "p") &&
-    isOneOf(s5, "e")
-  ) {
+  if (isOneOf(s3, "m") && isOneOf(s4, "p") && isOneOf(s5, "e")) {
     return [word.substring(3, word.length), null];
   }
 
@@ -40,8 +43,7 @@ export function removeMePrefix(word: string): [string, string[] | null] {
   // mem{rV|V} => mem-{rV|V} OR me-p{rV|V}
   if (
     isOneOf(s3, "m") &&
-    (isOneOf(s4, VOWEL) ||
-      (isOneOf(s4, "r") && isOneOf(s5, VOWEL)))
+    (isOneOf(s4, VOWEL) || (isOneOf(s4, "r") && isOneOf(s5, VOWEL)))
   ) {
     return [word.substring(3, word.length), ["m", "p"]];
   }
@@ -60,21 +62,13 @@ export function removeMePrefix(word: string): [string, string[] | null] {
 
   // Pattern 07
   // meng{g|h|q|k} => meng-{g|h|q|k}
-  if (
-    isOneOf(s3, "n") &&
-    isOneOf(s4, "g") &&
-    isOneOf(s5, "ghqk")
-  ) {
+  if (isOneOf(s3, "n") && isOneOf(s4, "g") && isOneOf(s5, "ghqk")) {
     return [word.substring(4, word.length), null];
   }
 
   // Pattern 08
   // mengV => meng-V OR meng-kV OR me-ngV OR mengV- where V = 'e'
-  if (
-    isOneOf(s3, "n") &&
-    isOneOf(s4, "g") &&
-    isOneOf(s5, VOWEL)
-  ) {
+  if (isOneOf(s3, "n") && isOneOf(s4, "g") && isOneOf(s5, VOWEL)) {
     if (isOneOf(s5, "e")) {
       return [word.substring(5, word.length), null];
     }
@@ -84,11 +78,7 @@ export function removeMePrefix(word: string): [string, string[] | null] {
 
   // Pattern 09
   // menyV => meny-sV OR me-nyV to stem menyala
-  if (
-    isOneOf(s3, "n") &&
-    isOneOf(s4, "y") &&
-    isOneOf(s5, VOWEL)
-  ) {
+  if (isOneOf(s3, "n") && isOneOf(s4, "y") && isOneOf(s5, VOWEL)) {
     if (isOneOf(s5, "a")) {
       return [word.substring(2, word.length), null];
     }
@@ -98,11 +88,7 @@ export function removeMePrefix(word: string): [string, string[] | null] {
 
   // Pattern 10
   // mempV => mem-pV where V != 'e'
-  if (
-    isOneOf(s3, "m") &&
-    isOneOf(s4, "p") &&
-    isNotOneOf(s5, "e")
-  ) {
+  if (isOneOf(s3, "m") && isOneOf(s4, "p") && isNotOneOf(s5, "e")) {
     return [word.substring(3, word.length), null];
   }
 
@@ -174,8 +160,7 @@ export function removePePrefix(word: string): [string, string[] | null] {
   // pem{rV|V} => pe-m{rV|V} OR pe-p{rV|V}
   if (
     isOneOf(s3, "m") &&
-    (isOneOf(s4, VOWEL) ||
-      (isOneOf(s4, "r") && isOneOf(s5, VOWEL)))
+    (isOneOf(s4, VOWEL) || (isOneOf(s4, "r") && isOneOf(s5, VOWEL)))
   ) {
     return [word.substring(3, word.length), ["m", "p"]];
   }
@@ -194,21 +179,13 @@ export function removePePrefix(word: string): [string, string[] | null] {
 
   // Pattern 09
   // pengC => peng-C
-  if (
-    isOneOf(s3, "n") &&
-    isOneOf(s4, "g") &&
-    isOneOf(s5, CONSONANT)
-  ) {
+  if (isOneOf(s3, "n") && isOneOf(s4, "g") && isOneOf(s5, CONSONANT)) {
     return [word.substring(4, word.length), null];
   }
 
   // Pattern 10
   // pengV => peng-V OR peng-kV OR pengV- where V = 'e'
-  if (
-    isOneOf(s3, "n") &&
-    isOneOf(s4, "g") &&
-    isOneOf(s5, VOWEL)
-  ) {
+  if (isOneOf(s3, "n") && isOneOf(s4, "g") && isOneOf(s5, VOWEL)) {
     if (isOneOf(s5, "e")) {
       return [word.substring(5, word.length), null];
     }
@@ -218,11 +195,7 @@ export function removePePrefix(word: string): [string, string[] | null] {
 
   // Pattern 11
   // penyV => peny-sV OR pe-nyV
-  if (
-    isOneOf(s3, "n") &&
-    isOneOf(s4, "y") &&
-    isOneOf(s5, VOWEL)
-  ) {
+  if (isOneOf(s3, "n") && isOneOf(s4, "y") && isOneOf(s5, VOWEL)) {
     return [word.substring(4, word.length), ["s", "ny"]];
   }
 
@@ -476,7 +449,7 @@ export function removePrefix(word: string): [string, string, string[]] {
   let prefix = "";
   let result = word;
   let recoding: string[] = [];
-  let funcret;
+  let funcret: [string, string[] | null] | [string, [string, string] | null];
 
   if (
     hasPrefix("di", word) ||

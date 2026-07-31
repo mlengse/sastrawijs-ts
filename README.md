@@ -2,7 +2,7 @@
 
 [![Node version](https://img.shields.io/node/v/sastrawijs.svg?style=flat)](http://nodejs.org/download/) [![Test](https://github.com/mlengse/sastrawijs/actions/workflows/test.yaml/badge.svg)](https://github.com/mlengse/sastrawijs/actions/workflows/test.yaml)
 
-SastrawiJs is a javascript package for doing stemming in Indonesian language. It is based from [Sastrawi](https://github.com/sastrawi/sastrawi) for PHP by [Andy Librian](https://github.com/andylibrian). For more information in english, see [README](#).
+SastrawiJs is a javascript package for doing stemming in Indonesian language. It is based from [Sastrawi](https://github.com/sastrawi/sastrawi) for PHP by [Andy Librian](https://github.com/andylibrian). For more information in english, see [README.en.md](README.en.md).
 
 SastrawiJs adalah package javascript untuk melakukan _stemming_ pada bahasa Indonesia. Dikembangkan dari [Sastrawi](https://github.com/sastrawi/sastrawi) untuk PHP yang dibuat oleh [Andy Librian](https://github.com/andylibrian).
 
@@ -32,12 +32,13 @@ npm install sastrawijs
 ### ECMAScript
 
 ```javascript
-import { Stemmer, Tokenizer } from 'sastrawijs'
+import { Stemmer, Tokenizer } from "sastrawijs";
 ```
 
 ### CommonJS
+
 ```javascript
-var sastrawijs = require('sastrawijs');
+var sastrawijs = require("sastrawijs");
 ```
 
 ## Contoh Penggunaan
@@ -45,15 +46,15 @@ var sastrawijs = require('sastrawijs');
 ### ECMAScript
 
 ```javascript
-const sentence = 'Perekonomian Indonesia sedang dalam pertumbuhan yang membanggakan'
-const stemmed = []
+const sentence = "Perekonomian Indonesia sedang dalam pertumbuhan yang membanggakan";
+const stemmed = [];
 
-const stemmer = new Stemmer()
-const tokenizer = new Tokenizer()
-const words = tokenizer.tokenize(sentence)
+const stemmer = new Stemmer();
+const tokenizer = new Tokenizer();
+const words = tokenizer.tokenize(sentence);
 
 for (const word of words) {
-  stemmed.push(stemmer.stem(word))
+  stemmed.push(stemmer.stem(word));
 }
 console.log(stemmed);
 ```
@@ -61,15 +62,15 @@ console.log(stemmed);
 ### CommonJS
 
 ```javascript
-const sentence = 'Perekonomian Indonesia sedang dalam pertumbuhan yang membanggakan'
-const stemmed = []
+const sentence = "Perekonomian Indonesia sedang dalam pertumbuhan yang membanggakan";
+const stemmed = [];
 
-const stemmer = new sastrawijs.Stemmer()
-const tokenizer = new sastrawijs.Tokenizer()
-const words = tokenizer.tokenize(sentence)
+const stemmer = new sastrawijs.Stemmer();
+const tokenizer = new sastrawijs.Tokenizer();
+const words = tokenizer.tokenize(sentence);
 
 for (const word of words) {
-  stemmed.push(stemmer.stem(word))
+  stemmed.push(stemmer.stem(word));
 }
 console.log(stemmed);
 ```

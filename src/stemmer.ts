@@ -1,6 +1,10 @@
 import defaultDictionary from "./dictionary.json";
 import { removePrefix } from "./prefix-removal";
-import { removeParticle, removePossessive, removeSuffix } from "./suffix-removal";
+import {
+  removeParticle,
+  removePossessive,
+  removeSuffix,
+} from "./suffix-removal";
 
 export type { AffixRemovalResult, PrefixRemovalResult } from "./types";
 
@@ -70,7 +74,10 @@ export default class Stemmer {
     return this.find(word) ? word : null;
   }
 
-  private removeAffixes(originalWord: string, prefixFirst: boolean): string | null {
+  private removeAffixes(
+    originalWord: string,
+    prefixFirst: boolean,
+  ): string | null {
     let suffix: string | undefined;
     let possessive: string | undefined;
     let particle: string | undefined;
@@ -99,9 +106,10 @@ export default class Stemmer {
       if (pf[0]) return pf[1];
     }
 
-    const removedSuffixes = suffix === "kan"
-      ? ["", "k", "an", possessive || "", particle || ""]
-      : ["", suffix || "", possessive || "", particle || ""];
+    const removedSuffixes =
+      suffix === "kan"
+        ? ["", "k", "an", possessive || "", particle || ""]
+        : ["", suffix || "", possessive || "", particle || ""];
 
     const lr = this.lastReturnLoop(originalWord, removedSuffixes);
     if (lr[0]) return lr[1];
@@ -138,7 +146,9 @@ export default class Stemmer {
       return word;
     }
 
-    const prefixFirst = /^(be.+lah|be.+an|me.+i|di.+i|pe.+i|ter.+i)$/.test(word);
+    const prefixFirst = /^(be.+lah|be.+an|me.+i|di.+i|pe.+i|ter.+i)$/.test(
+      word,
+    );
     const result = this.removeAffixes(word, prefixFirst);
     if (result) return result;
 
@@ -155,14 +165,17 @@ export default class Stemmer {
    * @param suffixes - The suffix parts that were removed.
    * @returns A tuple of [found, root word]. `found` is true if a root was identified.
    */
-  private lastReturnLoop(originalWord: string, suffixes: string[]): [boolean, string] {
+  private lastReturnLoop(
+    originalWord: string,
+    suffixes: string[],
+  ): [boolean, string] {
     let lenSuffixes = 0;
     suffixes.forEach(suffix => {
       lenSuffixes += suffix.length;
     });
     const wordWithoutSuffix = originalWord.substring(
       0,
-      originalWord.length - lenSuffixes
+      originalWord.length - lenSuffixes,
     );
 
     for (let i = 0; i < suffixes.length; i++) {
@@ -199,7 +212,7 @@ export default class Stemmer {
     const originalWord = word;
     let currentPrefix = "";
     let removedPrefix = "";
-    let recodingChar = [];
+    let recodingChar: string[] = [];
 
     for (let i = 0; i < 3; i++) {
       if (word.length < 3) {

@@ -7,6 +7,7 @@
   "browser": "dist/sastrawijs.umd.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/sastrawijs.cjs.js",
       "import": "./dist/sastrawijs.esm.mjs",
       "browser": "./dist/sastrawijs.umd.js"

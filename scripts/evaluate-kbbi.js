@@ -3,7 +3,11 @@ const path = require("path");
 const { Stemmer } = require("../dist/sastrawijs.cjs.js");
 
 const stemmer = new Stemmer();
-const kbbiDir = path.join(__dirname, "../data/kbbi-harvester-cdn/word-details");
+const defaultKbbiDir = path.join(
+  __dirname,
+  "../data/kbbi-harvester-cdn/word-details",
+);
+const kbbiDir = process.argv[2] || process.env.KBBI_DATA_DIR || defaultKbbiDir;
 
 let total = 0;
 let success = 0;
@@ -18,10 +22,6 @@ function cleanRoot(rootWord) {
 }
 
 function processDirectory(dir) {
-  if (!fs.existsSync(dir)) {
-    console.error(`Directory not found: ${dir}`);
-    return;
-  }
   const files = fs.readdirSync(dir);
   for (const file of files) {
     const fullPath = path.join(dir, file);
@@ -54,9 +54,17 @@ function processDirectory(dir) {
 }
 
 console.log("Mengevaluasi stemmer Sastrawi menggunakan dataset KBBI...");
+
+if (!fs.existsSync(kbbiDir)) {
+  console.error(`Directory not found: ${kbbiDir}`);
+  console.error("Usage: node scripts/evaluate-kbbi.js <path-to-word-details>");
+  console.error("       or set the KBBI_DATA_DIR environment variable.");
+  process.exit(1);
+}
+
 processDirectory(kbbiDir);
 
-console.log(`Evaluasi selesai.`);
+console.log("Evaluasi selesai.");
 console.log(`Total kata turunan diuji: ${total}`);
 console.log(`Berhasil: ${success}`);
 console.log(`Gagal: ${failures.length}`);
@@ -66,6 +74,6 @@ if (total > 0) {
 
 fs.writeFileSync(
   path.join(__dirname, "../failed-stems.json"),
-  JSON.stringify(failures, null, 2)
+  JSON.stringify(failures, null, 2),
 );
 console.log(`Daftar kata yang gagal disimpan di failed-stems.json`);
