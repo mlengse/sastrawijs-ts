@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { Stemmer } = require("../dist/sastrawijs.cjs.js");
+const { Stemmer } = require("../dist/sastrawijs-ts.cjs.js");
 
 const stemmer = new Stemmer();
 const defaultKbbiDir = path.join(

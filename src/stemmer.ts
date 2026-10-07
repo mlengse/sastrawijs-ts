@@ -16,7 +16,7 @@ export type { AffixRemovalResult, PrefixRemovalResult } from "./types";
  *
  * @example
  * ```ts
- * import { Stemmer } from "sastrawijs";
+ * import { Stemmer } from "sastrawijs-ts";
  *
  * const stemmer = new Stemmer();
  * stemmer.stem("berlari");  // "lari"

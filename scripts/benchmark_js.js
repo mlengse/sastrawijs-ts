@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const performance = require("perf_hooks").performance;
 
-const { Stemmer } = require("../dist/sastrawijs.cjs.js");
+const { Stemmer } = require("../dist/sastrawijs-ts.cjs.js");
 const Snowball = require("../../snowball-js/dist/Snowball.js");
 
 const datasetPath = path.join(

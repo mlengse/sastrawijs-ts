@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { Tokenizer } from "sastrawijs";
+ * import { Tokenizer } from "sastrawijs-ts";
  *
  * const tokenizer = new Tokenizer();
  * tokenizer.tokenize("Perekonomian Indonesia sedang dalam pertumbuhan");

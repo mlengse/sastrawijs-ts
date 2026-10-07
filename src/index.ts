@@ -1,11 +1,11 @@
 /**
  * SastrawiJs - Indonesian language stemming library.
  *
- * @module sastrawijs
+ * @module sastrawijs-ts
  *
  * @example
  * ```ts
- * import { Stemmer, Tokenizer } from "sastrawijs";
+ * import { Stemmer, Tokenizer } from "sastrawijs-ts";
  *
  * const stemmer = new Stemmer();
  * const tokenizer = new Tokenizer();

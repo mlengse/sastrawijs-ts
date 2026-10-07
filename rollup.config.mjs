@@ -12,7 +12,7 @@ export default {
     {
       file: pkg.browser,
       format: "umd",
-      name: pkg.name,
+      name: "sastrawijsTs",
     },
     {
       file: pkg.main,
