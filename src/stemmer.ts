@@ -170,9 +170,9 @@ export default class Stemmer {
     suffixes: string[],
   ): [boolean, string] {
     let lenSuffixes = 0;
-    suffixes.forEach(suffix => {
-      lenSuffixes += suffix.length;
-    });
+    for (let i = 0; i < suffixes.length; i++) {
+      lenSuffixes += suffixes[i].length;
+    }
     const wordWithoutSuffix = originalWord.substring(
       0,
       originalWord.length - lenSuffixes,
