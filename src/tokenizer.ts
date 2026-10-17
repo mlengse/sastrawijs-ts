@@ -1,3 +1,13 @@
+const HTML_ENTITY_REGEX = /&#(?:x([0-9a-fA-F]{1,6})|([0-9]{1,7}));/g;
+const HTML_TAG_REGEX = /<[^>]*>/g;
+const URL_REGEX = /(www\.|https?|s?ftp)\S+/g;
+const EMAIL_REGEX = /\S+@\S+/g;
+const MENTION_HASHTAG_REGEX = /(@|#)\S+/g;
+const NBSP_REGEX = /&nbsp;/gi;
+const NAMED_ENTITY_REGEX = /&.*;/g;
+const NON_ALPHA_SPACE_REGEX = /[^a-z\s]/g;
+const WHITESPACE_REGEX = /\s+/g;
+
 /**
  * Tokenizer for Indonesian text.
  *
@@ -20,10 +30,8 @@ export default class Tokenizer {
    * @returns The string with entities decoded.
    */
   parseHtmlEntities(str: string): string {
-    return str.replace(
-      /&#(?:x([0-9a-fA-F]{1,6})|([0-9]{1,7}));/g,
-      (_match, hex, dec) =>
-        String.fromCodePoint(hex ? parseInt(hex, 16) : parseInt(dec, 10)),
+    return str.replace(HTML_ENTITY_REGEX, (_match, hex, dec) =>
+      String.fromCodePoint(hex ? parseInt(hex, 16) : parseInt(dec, 10)),
     );
   }
 
@@ -51,16 +59,16 @@ export default class Tokenizer {
     if (typeof sentence !== "string") return [];
     let sent = this.parseHtmlEntities(sentence);
     sent = sent.toLowerCase();
-    sent = sent.replace(/<[^>]*>/g, " ");
-    sent = sent.replace(/(www\.|https?|s?ftp)\S+/g, "");
-    sent = sent.replace(/\S+@\S+/g, "");
-    sent = sent.replace(/(@|#)\S+/g, "");
-    sent = sent.replace(/&nbsp;/gi, " ");
-    sent = sent.replace(/&.*;/g, "");
-    sent = sent.replace(/[^a-z\s]/g, " ");
-    sent = sent.replace(/\s+/g, " ");
+    sent = sent.replace(HTML_TAG_REGEX, " ");
+    sent = sent.replace(URL_REGEX, "");
+    sent = sent.replace(EMAIL_REGEX, "");
+    sent = sent.replace(MENTION_HASHTAG_REGEX, "");
+    sent = sent.replace(NBSP_REGEX, " ");
+    sent = sent.replace(NAMED_ENTITY_REGEX, "");
+    sent = sent.replace(NON_ALPHA_SPACE_REGEX, " ");
+    sent = sent.replace(WHITESPACE_REGEX, " ");
     sent = sent.trim();
     if (sent === "") return [];
-    return sent.split(/\s+/);
+    return sent.split(WHITESPACE_REGEX);
   }
 }
