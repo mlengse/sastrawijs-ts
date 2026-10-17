@@ -58,7 +58,7 @@ describe("suffix-removal", () => {
   });
 
   describe("removeSuffix", () => {
-    it("removes inflectional suffixes (-is, -isme, -isasi, -i, -kan, -an)", () => {
+    it("removes inflectional suffixes (-is, -isme, -isasi, -i, -kan, -an) without hyphen", () => {
       expect(removeSuffix("analisis")).toEqual(["is", "analis"]);
       expect(removeSuffix("mecanisme")).toEqual(["isme", "mecan"]);
       expect(removeSuffix("kanalisasi")).toEqual(["isasi", "kanal"]);
@@ -67,12 +67,22 @@ describe("suffix-removal", () => {
       expect(removeSuffix("makanan")).toEqual(["an", "makan"]);
     });
 
-    it("removes inflectional suffixes with hyphen", () => {
+    it("removes inflectional suffixes (-is, -isme, -isasi, -i, -kan, -an) with hyphen", () => {
+      expect(removeSuffix("analis-is")).toEqual(["-is", "analis"]);
+      expect(removeSuffix("mecan-isme")).toEqual(["-isme", "mecan"]);
+      expect(removeSuffix("kanal-isasi")).toEqual(["-isasi", "kanal"]);
+      expect(removeSuffix("mewarna-i")).toEqual(["-i", "mewarna"]);
+      expect(removeSuffix("membagi-kan")).toEqual(["-kan", "membagi"]);
       expect(removeSuffix("makan-an")).toEqual(["-an", "makan"]);
     });
 
     it("returns empty suffix if word does not end with matching suffix", () => {
       expect(removeSuffix("kucing")).toEqual(["", "kucing"]);
+      expect(removeSuffix("rumah")).toEqual(["", "rumah"]);
+    });
+
+    it("handles empty string", () => {
+      expect(removeSuffix("")).toEqual(["", ""]);
     });
   });
 });
