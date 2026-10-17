@@ -18,12 +18,19 @@ describe("utils", () => {
   describe("newChar", () => {
     it("returns character at specified index if within bounds", () => {
       expect(newChar("hello", 0)).toBe("h");
+      expect(newChar("hello", 2)).toBe("l");
       expect(newChar("hello", 4)).toBe("o");
     });
 
-    it("returns empty string if index is out of bounds", () => {
+    it("returns empty string if index is out of bounds or empty string", () => {
       expect(newChar("hello", 5)).toBe("");
       expect(newChar("hello", 10)).toBe("");
+      expect(newChar("", 0)).toBe("");
+      expect(newChar("", 1)).toBe("");
+    });
+
+    it("returns undefined for negative index due to array indexing on string in JS", () => {
+      expect(newChar("hello", -1)).toBeUndefined();
     });
   });
 
