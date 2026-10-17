@@ -1,4 +1,3 @@
-
 import Stemmer from "../stemmer";
 
 describe("Stemmer Security Tests", () => {
