@@ -41,10 +41,19 @@ describe("suffix-removal", () => {
     it("removes particle suffixes with hyphen", () => {
       expect(removeParticle("allah-lah")).toEqual(["-lah", "allah"]);
       expect(removeParticle("apa-kah")).toEqual(["-kah", "apa"]);
+      expect(removeParticle("siapa-tah")).toEqual(["-tah", "siapa"]);
+      expect(removeParticle("apa-pun")).toEqual(["-pun", "apa"]);
     });
 
     it("returns empty particle if word does not end with particle suffix", () => {
       expect(removeParticle("rumah")).toEqual(["", "rumah"]);
+      expect(removeParticle("puncak")).toEqual(["", "puncak"]);
+      expect(removeParticle("tahanan")).toEqual(["", "tahanan"]);
+      expect(removeParticle("lahir")).toEqual(["", "lahir"]);
+    });
+
+    it("handles empty string", () => {
+      expect(removeParticle("")).toEqual(["", ""]);
     });
   });
 
