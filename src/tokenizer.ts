@@ -20,13 +20,11 @@ export default class Tokenizer {
    * @returns The string with entities decoded.
    */
   parseHtmlEntities(str: string): string {
-    return str
-      .replace(/&#x([0-9a-fA-F]{1,6});/g, (_match, hex) =>
-        String.fromCodePoint(parseInt(hex, 16)),
-      )
-      .replace(/&#([0-9]{1,7});/g, (_match, dec) =>
-        String.fromCodePoint(parseInt(dec, 10)),
-      );
+    return str.replace(
+      /&#(?:x([0-9a-fA-F]{1,6})|([0-9]{1,7}));/g,
+      (_match, hex, dec) =>
+        String.fromCodePoint(hex ? parseInt(hex, 16) : parseInt(dec, 10)),
+    );
   }
 
   /**
