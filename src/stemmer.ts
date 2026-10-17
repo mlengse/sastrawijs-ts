@@ -8,6 +8,8 @@ import {
 
 export type { AffixRemovalResult, PrefixRemovalResult } from "./types";
 
+const PREFIX_FIRST_REGEX = /^(be.+lah|be.+an|me.+i|di.+i|pe.+i|ter.+i)$/;
+
 /**
  * Indonesian language stemmer based on the Sastrawi algorithm.
  *
@@ -146,9 +148,7 @@ export default class Stemmer {
       return word;
     }
 
-    const prefixFirst = /^(be.+lah|be.+an|me.+i|di.+i|pe.+i|ter.+i)$/.test(
-      word,
-    );
+    const prefixFirst = PREFIX_FIRST_REGEX.test(word);
     const result = this.removeAffixes(word, prefixFirst);
     if (result) return result;
 
