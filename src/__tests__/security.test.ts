@@ -25,7 +25,8 @@ import Tokenizer from "../tokenizer";
 describe("Tokenizer Security Tests", () => {
   it("should process large inputs without catastrophic backtracking (ReDoS)", () => {
     const tokenizer = new Tokenizer();
-    const maliciousInput = "http" + "a".repeat(100000) + " &" + "b".repeat(100000);
+    const maliciousInput =
+      "http" + "a".repeat(100000) + " &" + "b".repeat(100000);
 
     const start = Date.now();
     const result = tokenizer.tokenize(maliciousInput);
