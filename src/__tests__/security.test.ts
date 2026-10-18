@@ -25,7 +25,8 @@ import Tokenizer from "../tokenizer";
 describe("Tokenizer Security Tests", () => {
   it("should process large inputs without catastrophic backtracking (ReDoS)", () => {
     const tokenizer = new Tokenizer();
-    const maliciousInput = "http" + "a".repeat(100000) + " &" + "b".repeat(100000);
+    const maliciousInput =
+      "http" + "a".repeat(100000) + " &" + "b".repeat(100000);
 
     const start = Date.now();
     const result = tokenizer.tokenize(maliciousInput);
@@ -33,5 +34,14 @@ describe("Tokenizer Security Tests", () => {
 
     expect(duration).toBeLessThan(1000); // Should finish in a few milliseconds
     expect(result).toBeDefined();
+  });
+
+  it("should non-greedily strip HTML entities without over-deleting text", () => {
+    const tokenizer = new Tokenizer();
+    expect(tokenizer.tokenize("foo &amp; bar &gt; baz")).toEqual([
+      "foo",
+      "bar",
+      "baz",
+    ]);
   });
 });
