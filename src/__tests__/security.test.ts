@@ -34,4 +34,11 @@ describe("Tokenizer Security Tests", () => {
     expect(duration).toBeLessThan(1000); // Should finish in a few milliseconds
     expect(result).toBeDefined();
   });
+
+  it("should safely handle out-of-range numeric HTML entities without throwing RangeError", () => {
+    const tokenizer = new Tokenizer();
+    expect(() => tokenizer.tokenize("&#x110000; &#9999999; &#xABCDEF;")).not.toThrow();
+    expect(() => tokenizer.parseHtmlEntities("&#x110000;")).not.toThrow();
+    expect(tokenizer.parseHtmlEntities("&#x110000;")).toBe("&#x110000;");
+  });
 });

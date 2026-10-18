@@ -30,9 +30,13 @@ export default class Tokenizer {
    * @returns The string with entities decoded.
    */
   parseHtmlEntities(str: string): string {
-    return str.replace(HTML_ENTITY_REGEX, (_match, hex, dec) =>
-      String.fromCodePoint(hex ? parseInt(hex, 16) : parseInt(dec, 10)),
-    );
+    return str.replace(HTML_ENTITY_REGEX, (match, hex, dec) => {
+      const codePoint = hex ? parseInt(hex, 16) : parseInt(dec, 10);
+      if (Number.isNaN(codePoint) || codePoint < 0 || codePoint > 0x10ffff) {
+        return match;
+      }
+      return String.fromCodePoint(codePoint);
+    });
   }
 
   /**
