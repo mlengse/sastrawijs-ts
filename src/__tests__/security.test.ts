@@ -19,3 +19,19 @@ describe("Stemmer Security Tests", () => {
     expect(stemmer.internalDictionary.size).toBe(0);
   });
 });
+
+import Tokenizer from "../tokenizer";
+
+describe("Tokenizer Security Tests", () => {
+  it("should process large inputs without catastrophic backtracking (ReDoS)", () => {
+    const tokenizer = new Tokenizer();
+    const maliciousInput = "http" + "a".repeat(100000) + " &" + "b".repeat(100000);
+
+    const start = Date.now();
+    const result = tokenizer.tokenize(maliciousInput);
+    const duration = Date.now() - start;
+
+    expect(duration).toBeLessThan(1000); // Should finish in a few milliseconds
+    expect(result).toBeDefined();
+  });
+});
