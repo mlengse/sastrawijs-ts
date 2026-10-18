@@ -4,7 +4,7 @@ const URL_REGEX = /(?:https?:\/\/|s?ftp:\/\/|www\.)\S+/gi;
 const EMAIL_REGEX = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
 const MENTION_HASHTAG_REGEX = /(@|#)\S+/g;
 const NBSP_REGEX = /&nbsp;/gi;
-const NAMED_ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
+const NAMED_ENTITY_REGEX = /&[^;\s]+;/g;
 const NON_ALPHA_SPACE_REGEX = /[^a-z\s]/g;
 const WHITESPACE_REGEX = /\s+/g;
 
