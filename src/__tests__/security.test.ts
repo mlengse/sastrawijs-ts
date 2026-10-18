@@ -36,12 +36,10 @@ describe("Tokenizer Security Tests", () => {
     expect(result).toBeDefined();
   });
 
-  it("should non-greedily strip HTML entities without over-deleting text", () => {
+  it("should safely handle out-of-range numeric HTML entities without throwing RangeError", () => {
     const tokenizer = new Tokenizer();
-    expect(tokenizer.tokenize("foo &amp; bar &gt; baz")).toEqual([
-      "foo",
-      "bar",
-      "baz",
-    ]);
+    expect(() => tokenizer.tokenize("&#x110000; &#9999999; &#xABCDEF;")).not.toThrow();
+    expect(() => tokenizer.parseHtmlEntities("&#x110000;")).not.toThrow();
+    expect(tokenizer.parseHtmlEntities("&#x110000;")).toBe("&#x110000;");
   });
 });

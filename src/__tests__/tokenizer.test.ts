@@ -116,5 +116,11 @@ describe("Tokenizer", () => {
     it("leaves non-entity text unchanged", () => {
       expect(tokenizer.parseHtmlEntities("hello")).toBe("hello");
     });
+
+    it("handles invalid or out-of-range numeric HTML entities gracefully", () => {
+      expect(tokenizer.parseHtmlEntities("&#x110000;")).toBe("&#x110000;");
+      expect(tokenizer.parseHtmlEntities("&#9999999;")).toBe("&#9999999;");
+      expect(tokenizer.parseHtmlEntities("&#x1FFFFF;")).toBe("&#x1FFFFF;");
+    });
   });
 });
