@@ -18,6 +18,18 @@ describe("Stemmer Security Tests", () => {
     expect(stemmer.internalDictionary).toBeInstanceOf(Set);
     expect(stemmer.internalDictionary.size).toBe(0);
   });
+
+  it("should process large inputs without ReDoS in prefix-first check", () => {
+    const stemmer = new Stemmer([]);
+    const maliciousInput = "be" + "a".repeat(100000) + "lah";
+
+    const start = Date.now();
+    const result = stemmer.stem(maliciousInput);
+    const duration = Date.now() - start;
+
+    expect(duration).toBeLessThan(1000);
+    expect(result).toBe(maliciousInput);
+  });
 });
 
 import Tokenizer from "../tokenizer";
@@ -38,7 +50,9 @@ describe("Tokenizer Security Tests", () => {
 
   it("should safely handle out-of-range numeric HTML entities without throwing RangeError", () => {
     const tokenizer = new Tokenizer();
-    expect(() => tokenizer.tokenize("&#x110000; &#9999999; &#xABCDEF;")).not.toThrow();
+    expect(() =>
+      tokenizer.tokenize("&#x110000; &#9999999; &#xABCDEF;"),
+    ).not.toThrow();
     expect(() => tokenizer.parseHtmlEntities("&#x110000;")).not.toThrow();
     expect(tokenizer.parseHtmlEntities("&#x110000;")).toBe("&#x110000;");
   });
