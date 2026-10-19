@@ -179,10 +179,7 @@ export default class Stemmer {
     );
 
     for (let i = 0; i < suffixes.length; i++) {
-      let suffixCombination = "";
-      for (let j = 0; j <= i; j++) {
-        suffixCombination += suffixes[j];
-      }
+      const suffixCombination = suffixes.slice(0, i + 1).join("");
 
       let word = wordWithoutSuffix + suffixCombination;
       if (this.find(word)) {
