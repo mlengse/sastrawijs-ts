@@ -61,17 +61,17 @@ export default class Tokenizer {
    */
   tokenize(sentence: string): string[] {
     if (typeof sentence !== "string") return [];
-    let sent = this.parseHtmlEntities(sentence);
-    sent = sent.toLowerCase();
-    sent = sent.replace(HTML_TAG_REGEX, " ");
-    sent = sent.replace(URL_REGEX, "");
-    sent = sent.replace(EMAIL_REGEX, "");
-    sent = sent.replace(MENTION_HASHTAG_REGEX, "");
-    sent = sent.replace(NBSP_REGEX, " ");
-    sent = sent.replace(NAMED_ENTITY_REGEX, "");
-    sent = sent.replace(NON_ALPHA_SPACE_REGEX, " ");
-    sent = sent.replace(WHITESPACE_REGEX, " ");
-    sent = sent.trim();
+    const sent = this.parseHtmlEntities(sentence)
+      .toLowerCase()
+      .replace(HTML_TAG_REGEX, " ")
+      .replace(URL_REGEX, "")
+      .replace(EMAIL_REGEX, "")
+      .replace(MENTION_HASHTAG_REGEX, "")
+      .replace(NBSP_REGEX, " ")
+      .replace(NAMED_ENTITY_REGEX, "")
+      .replace(NON_ALPHA_SPACE_REGEX, " ")
+      .replace(WHITESPACE_REGEX, " ")
+      .trim();
     if (sent === "") return [];
     return sent.split(WHITESPACE_REGEX);
   }
