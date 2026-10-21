@@ -1,11 +1,7 @@
 const HTML_ENTITY_REGEX = /&#(?:x([0-9a-fA-F]{1,6})|([0-9]{1,7}));/g;
-const HTML_TAG_REGEX = /<[^>]*>/g;
-const URL_REGEX = /(?:https?:\/\/|s?ftp:\/\/|www\.)\S+/gi;
-const EMAIL_REGEX = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
-const MENTION_HASHTAG_REGEX = /(@|#)\S+/g;
-const NBSP_REGEX = /&nbsp;/gi;
-const NAMED_ENTITY_REGEX = /&[^;\s]+;/g;
-const NON_ALPHA_SPACE_REGEX = /[^a-z\s]/g;
+const STRIP_REGEX =
+  /(?:https?:\/\/|s?ftp:\/\/|www\.)\S+|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b|[@#]\S+|(?!&(?:nbsp|NBSP);)&[^;\s]+;/gi;
+const CLEAN_REGEX = /<[^>]*>|&nbsp;|[^a-z\s]/gi;
 const WHITESPACE_REGEX = /\s+/g;
 
 /**
@@ -63,13 +59,8 @@ export default class Tokenizer {
     if (typeof sentence !== "string") return [];
     const sent = this.parseHtmlEntities(sentence)
       .toLowerCase()
-      .replace(HTML_TAG_REGEX, " ")
-      .replace(URL_REGEX, "")
-      .replace(EMAIL_REGEX, "")
-      .replace(MENTION_HASHTAG_REGEX, "")
-      .replace(NBSP_REGEX, " ")
-      .replace(NAMED_ENTITY_REGEX, "")
-      .replace(NON_ALPHA_SPACE_REGEX, " ")
+      .replace(STRIP_REGEX, "")
+      .replace(CLEAN_REGEX, " ")
       .replace(WHITESPACE_REGEX, " ")
       .trim();
     if (sent === "") return [];
