@@ -43,8 +43,7 @@ export default class Tokenizer {
    * 2. Converts to lowercase
    * 3. Strips HTML tags, URLs, emails, mentions, hashtags
    * 4. Strips named HTML entities and special characters
-   * 5. Normalizes whitespace
-   * 6. Splits into word array
+   * 5. Normalizes whitespace and splits into word array
    *
    * @param sentence - The sentence to tokenize.
    * @returns An array of cleaned words. Returns `[]` if input is not a string or is empty/whitespace-only.
@@ -61,7 +60,6 @@ export default class Tokenizer {
       .toLowerCase()
       .replace(STRIP_REGEX, "")
       .replace(CLEAN_REGEX, " ")
-      .replace(WHITESPACE_REGEX, " ")
       .trim();
     if (sent === "") return [];
     return sent.split(WHITESPACE_REGEX);
