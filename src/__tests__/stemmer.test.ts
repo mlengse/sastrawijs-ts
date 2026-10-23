@@ -452,6 +452,39 @@ describe("Stemmer", () => {
       custom.addToDict(["baca"]);
       expect(custom.print().has("baca")).toBe(true);
     });
+
+    it("handles non-array input for addToDict safely without throwing or modifying dictionary", () => {
+      const custom = new Stemmer(["lari", "tulis"]);
+      expect(() => custom.addToDict(null as unknown as string[])).not.toThrow();
+      expect(() =>
+        custom.addToDict(undefined as unknown as string[]),
+      ).not.toThrow();
+      expect(() =>
+        custom.addToDict("singleword" as unknown as string[]),
+      ).not.toThrow();
+      expect(() => custom.addToDict(123 as unknown as string[])).not.toThrow();
+      expect(() =>
+        custom.addToDict({ word: "lari" } as unknown as string[]),
+      ).not.toThrow();
+      expect(custom.print().size).toBe(2);
+      expect(custom.find("singleword")).toBe(false);
+    });
+
+    it("handles non-array input for remove safely without throwing or modifying dictionary", () => {
+      const custom = new Stemmer(["lari", "tulis"]);
+      expect(() => custom.remove(null as unknown as string[])).not.toThrow();
+      expect(() =>
+        custom.remove(undefined as unknown as string[]),
+      ).not.toThrow();
+      expect(() => custom.remove("lari" as unknown as string[])).not.toThrow();
+      expect(() => custom.remove(123 as unknown as string[])).not.toThrow();
+      expect(() =>
+        custom.remove({ word: "lari" } as unknown as string[]),
+      ).not.toThrow();
+      expect(custom.print().size).toBe(2);
+      expect(custom.find("lari")).toBe(true);
+      expect(custom.find("tulis")).toBe(true);
+    });
   });
 
   describe("edge cases", () => {
