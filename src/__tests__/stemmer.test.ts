@@ -439,6 +439,19 @@ describe("Stemmer", () => {
       custom.remove(["lari"]);
       expect(custom.stem("berlari")).toBe("berlari");
     });
+
+    it("returns internal dictionary using print()", () => {
+      const custom = new Stemmer(["lari", "tulis"]);
+      const dictSet = custom.print();
+      expect(dictSet).toBeInstanceOf(Set);
+      expect(dictSet.size).toBe(2);
+      expect(dictSet.has("lari")).toBe(true);
+      expect(dictSet.has("tulis")).toBe(true);
+      expect(dictSet).toBe(custom.internalDictionary);
+
+      custom.addToDict(["baca"]);
+      expect(custom.print().has("baca")).toBe(true);
+    });
   });
 
   describe("edge cases", () => {
