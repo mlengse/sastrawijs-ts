@@ -68,6 +68,7 @@ export default class Stemmer {
    * @param words - Array of words to add.
    */
   addToDict(words: string[]): void {
+    if (!Array.isArray(words)) return;
     words.forEach(word => this.internalDictionary.add(word));
   }
 
@@ -76,6 +77,7 @@ export default class Stemmer {
    * @param words - Array of words to remove.
    */
   remove(words: string[]): void {
+    if (!Array.isArray(words)) return;
     words.forEach(word => this.internalDictionary.delete(word));
   }
 
