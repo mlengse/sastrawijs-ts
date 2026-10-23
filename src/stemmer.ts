@@ -118,16 +118,22 @@ export default class Stemmer {
     }
 
     [particle, w] = removeParticle(w);
-    let r = this.returnIfFound(w);
-    if (r) return r;
+    if (particle) {
+      const r = this.returnIfFound(w);
+      if (r) return r;
+    }
 
     [possessive, w] = removePossessive(w);
-    r = this.returnIfFound(w);
-    if (r) return r;
+    if (possessive) {
+      const r = this.returnIfFound(w);
+      if (r) return r;
+    }
 
     [suffix, w] = removeSuffix(w);
-    r = this.returnIfFound(w);
-    if (r) return r;
+    if (suffix) {
+      const r = this.returnIfFound(w);
+      if (r) return r;
+    }
 
     if (!prefixFirst) {
       const pf = this.removePrefixes(w);
