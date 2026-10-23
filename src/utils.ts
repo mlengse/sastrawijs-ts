@@ -25,7 +25,7 @@ export function newChar(word: string, index: number): string {
  */
 export function isOneOf(c: string, chars: string): boolean {
   if (c.length !== 1) return false;
-  return chars.indexOf(c) !== -1;
+  return chars.includes(c);
 }
 
 /**
