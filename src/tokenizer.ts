@@ -1,7 +1,6 @@
 const HTML_ENTITY_REGEX = /&#(?:x([0-9a-fA-F]{1,6})|([0-9]{1,7}));/g;
-const STRIP_REGEX =
-  /(?:https?:\/\/|s?ftp:\/\/|www\.)\S+|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b|[@#]\S+|(?!&(?:nbsp|NBSP);)&[^;\s]+;/gi;
-const CLEAN_REGEX = /<[^>]*>|&nbsp;|[^a-z\s]/gi;
+const TOKEN_CLEAN_REGEX =
+  /(?:https?:\/\/|s?ftp:\/\/|www\.)\S+|\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b|[@#]\S+|<[^>]*>|&[^;\s]+;|[^a-z\s]/gi;
 const WHITESPACE_REGEX = /\s+/g;
 
 /**
@@ -41,9 +40,8 @@ export default class Tokenizer {
    * Performs the following processing:
    * 1. Decodes numeric HTML entities
    * 2. Converts to lowercase
-   * 3. Strips HTML tags, URLs, emails, mentions, hashtags
-   * 4. Strips named HTML entities and special characters
-   * 5. Normalizes whitespace and splits into word array
+   * 3. Strips HTML tags, URLs, emails, mentions, hashtags, named HTML entities, and special characters in a single pass
+   * 4. Normalizes whitespace and splits into word array
    *
    * @param sentence - The sentence to tokenize.
    * @returns An array of cleaned words. Returns `[]` if input is not a string or is empty/whitespace-only.
@@ -58,8 +56,7 @@ export default class Tokenizer {
     if (typeof sentence !== "string") return [];
     const sent = this.parseHtmlEntities(sentence)
       .toLowerCase()
-      .replace(STRIP_REGEX, "")
-      .replace(CLEAN_REGEX, " ")
+      .replace(TOKEN_CLEAN_REGEX, " ")
       .trim();
     if (sent === "") return [];
     return sent.split(WHITESPACE_REGEX);
