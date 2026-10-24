@@ -13,7 +13,7 @@ export type { AffixRemovalResult, PrefixRemovalResult } from "./types";
  *
  * Replaces regex /^(be.+lah|be.+an|me.+i|di.+i|pe.+i|ter.+i)$/ to avoid ReDoS.
  */
-function isPrefixFirst(word: string): boolean {
+export function isPrefixFirst(word: string): boolean {
   if (word.length < 4) return false;
 
   if (word.endsWith("i")) {

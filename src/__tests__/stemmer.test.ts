@@ -1,4 +1,4 @@
-import Stemmer from "../stemmer";
+import Stemmer, { isPrefixFirst } from "../stemmer";
 
 const customDictionary = [
   "hancur",
@@ -542,6 +542,56 @@ describe("Stemmer", () => {
       expect(stemmer.stem("idealisme")).toBe("ideal");
       expect(stemmer.stem("mentaati")).toBe("taat");
       expect(stemmer.stem("melewati")).toBe("lewat");
+    });
+  });
+
+  describe("isPrefixFirst", () => {
+    it("returns false for words shorter than 4 characters", () => {
+      expect(isPrefixFirst("i")).toBe(false);
+      expect(isPrefixFirst("ab")).toBe(false);
+      expect(isPrefixFirst("mei")).toBe(false);
+      expect(isPrefixFirst("bui")).toBe(false);
+    });
+
+    describe("words ending with 'i'", () => {
+      it("returns true for words length >= 4 starting with me, di, or pe", () => {
+        expect(isPrefixFirst("memulai")).toBe(true);
+        expect(isPrefixFirst("dimulai")).toBe(true);
+        expect(isPrefixFirst("petani")).toBe(true);
+      });
+
+      it("handles words starting with ter based on length", () => {
+        expect(isPrefixFirst("teri")).toBe(false);
+        expect(isPrefixFirst("terobati")).toBe(true);
+      });
+
+      it("returns false for words ending with i that do not match prefix patterns", () => {
+        expect(isPrefixFirst("berlari")).toBe(false);
+        expect(isPrefixFirst("kembali")).toBe(false);
+      });
+    });
+
+    describe("words starting with 'be'", () => {
+      it("handles words ending with 'lah' based on length", () => {
+        expect(isPrefixFirst("belah")).toBe(false);
+        expect(isPrefixFirst("berimanlah")).toBe(true);
+      });
+
+      it("handles words ending with 'an' based on length", () => {
+        expect(isPrefixFirst("bean")).toBe(false);
+        expect(isPrefixFirst("beban")).toBe(true);
+        expect(isPrefixFirst("bertebaran")).toBe(true);
+      });
+
+      it("returns false for words starting with be but not ending with lah or an", () => {
+        expect(isPrefixFirst("berlari")).toBe(false);
+        expect(isPrefixFirst("bekerja")).toBe(false);
+      });
+    });
+
+    it("returns false for words not matching any prefix-first criteria", () => {
+      expect(isPrefixFirst("makanan")).toBe(false);
+      expect(isPrefixFirst("minuman")).toBe(false);
     });
   });
 });
