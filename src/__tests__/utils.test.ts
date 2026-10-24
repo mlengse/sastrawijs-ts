@@ -2,6 +2,7 @@ import {
   VOWEL,
   CONSONANT,
   newChar,
+  getChars,
   isOneOf,
   isNotOneOf,
   hasPrefix,
@@ -29,8 +30,20 @@ describe("utils", () => {
       expect(newChar("", 1)).toBe("");
     });
 
-    it("returns undefined for negative index due to array indexing on string in JS", () => {
-      expect(newChar("hello", -1)).toBeUndefined();
+    it("returns empty string for negative index", () => {
+      expect(newChar("hello", -1)).toBe("");
+    });
+  });
+
+  describe("getChars", () => {
+    it("returns requested number of characters starting from index", () => {
+      expect(getChars("pemakan", 2, 3)).toEqual(["m", "a", "k"]);
+      expect(getChars("pelajar", 2, 6)).toEqual(["l", "a", "j", "a", "r", ""]);
+    });
+
+    it("handles out of bounds indices by returning empty strings", () => {
+      expect(getChars("cat", 2, 3)).toEqual(["t", "", ""]);
+      expect(getChars("cat", 5, 2)).toEqual(["", ""]);
     });
   });
 

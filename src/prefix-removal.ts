@@ -1,5 +1,5 @@
 import {
-  newChar,
+  getChars,
   isOneOf,
   isNotOneOf,
   hasPrefix,
@@ -17,9 +17,7 @@ import {
  * @returns A tuple of [result, recoding characters or null].
  */
 export function removeMePrefix(word: string): [string, string[] | null] {
-  const s3 = newChar(word, 2);
-  const s4 = newChar(word, 3);
-  const s5 = newChar(word, 4);
+  const [s3, s4, s5] = getChars(word, 2, 3);
 
   // Pattern 01
   // me{l|r|w|y}V => me-{l|r|w|y}V
@@ -105,12 +103,7 @@ export function removeMePrefix(word: string): [string, string[] | null] {
  * @returns A tuple of [result, recoding characters or null].
  */
 export function removePePrefix(word: string): [string, string[] | null] {
-  const s3 = newChar(word, 2);
-  const s4 = newChar(word, 3);
-  const s5 = newChar(word, 4);
-  const s6 = newChar(word, 5);
-  const s7 = newChar(word, 6);
-  const s8 = newChar(word, 7);
+  const [s3, s4, s5, s6, s7, s8] = getChars(word, 2, 6);
 
   // Pattern 01
   // pe{w|y}V => pe-{w|y}V
@@ -256,12 +249,7 @@ export function removePePrefix(word: string): [string, string[] | null] {
  * @returns A tuple of [result, recoding characters or null].
  */
 export function removeBePrefix(word: string): [string, string[] | null] {
-  const s3 = newChar(word, 2);
-  const s4 = newChar(word, 3);
-  const s5 = newChar(word, 4);
-  const s6 = newChar(word, 5);
-  const s7 = newChar(word, 6);
-  const s8 = newChar(word, 7);
+  const [s3, s4, s5, s6, s7, s8] = getChars(word, 2, 6);
 
   // Pattern 01
   // berV => ber-V OR be-rV
@@ -327,11 +315,7 @@ export function removeBePrefix(word: string): [string, string[] | null] {
  * @returns A tuple of [result, recoding characters or null].
  */
 export function removeTePrefix(word: string): [string, string[] | null] {
-  const s3 = newChar(word, 2);
-  const s4 = newChar(word, 3);
-  const s5 = newChar(word, 4);
-  const s6 = newChar(word, 5);
-  const s7 = newChar(word, 6);
+  const [s3, s4, s5, s6, s7] = getChars(word, 2, 5);
 
   // Pattern 01
   // terV => ter-V OR te-rV
@@ -400,10 +384,7 @@ export function removeTePrefix(word: string): [string, string[] | null] {
  * @returns A tuple of [result, recoding pair or null].
  */
 export function removeInfix(word: string): [string, [string, string] | null] {
-  const s1 = newChar(word, 0);
-  const s2 = newChar(word, 1);
-  const s3 = newChar(word, 2);
-  const s4 = newChar(word, 3);
+  const [s1, s2, s3, s4] = getChars(word, 0, 4);
 
   // Pattern 01
   // CerV => CerV OR CV
