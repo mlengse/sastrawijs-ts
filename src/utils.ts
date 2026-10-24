@@ -11,10 +11,29 @@ export const CONSONANT = "bcdfghjklmnpqrstvwxyz";
  * @returns The character at the index, or an empty string if out of bounds.
  */
 export function newChar(word: string, index: number): string {
-  if (index >= word.length) {
+  if (index < 0 || index >= word.length) {
     return "";
   }
   return word[index];
+}
+
+/**
+ * Safely retrieves a sequence of characters starting from startIndex.
+ * @param word - The word to extract characters from.
+ * @param startIndex - The starting character index.
+ * @param count - The number of characters to retrieve.
+ * @returns An array of characters of length `count`.
+ */
+export function getChars(
+  word: string,
+  startIndex: number,
+  count: number,
+): string[] {
+  const chars: string[] = [];
+  for (let i = 0; i < count; i++) {
+    chars.push(newChar(word, startIndex + i));
+  }
+  return chars;
 }
 
 /**
