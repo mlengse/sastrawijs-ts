@@ -1,3 +1,4 @@
+import * as IndexExports from "../index";
 import {
   Stemmer,
   Tokenizer,
@@ -13,6 +14,12 @@ describe("index export module", () => {
     expect(Tokenizer).toBeDefined();
     expect(Stemmer).toBe(DefaultStemmer);
     expect(Tokenizer).toBe(DefaultTokenizer);
+  });
+
+  it("exports exact named exports structure on namespace object", () => {
+    expect(Object.keys(IndexExports)).toEqual(["Stemmer", "Tokenizer"]);
+    expect(IndexExports.Stemmer).toBe(DefaultStemmer);
+    expect(IndexExports.Tokenizer).toBe(DefaultTokenizer);
   });
 
   it("allows instantiating Stemmer and Tokenizer from index exports", () => {
