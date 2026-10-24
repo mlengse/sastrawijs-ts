@@ -1,4 +1,9 @@
-import { Stemmer, Tokenizer } from "../index";
+import {
+  Stemmer,
+  Tokenizer,
+  type AffixRemovalResult,
+  type PrefixRemovalResult,
+} from "../index";
 import DefaultStemmer from "../stemmer";
 import DefaultTokenizer from "../tokenizer";
 
@@ -16,6 +21,24 @@ describe("index export module", () => {
 
     expect(stemmer).toBeInstanceOf(DefaultStemmer);
     expect(tokenizer).toBeInstanceOf(DefaultTokenizer);
+  });
+
+  it("exports type definitions correctly", () => {
+    const affixResult: AffixRemovalResult = {
+      removed: "-lah",
+      word: "makan",
+    };
+    const prefixResult: PrefixRemovalResult = {
+      removed: "me-",
+      word: "makan",
+      recoding: ["p"],
+    };
+
+    expect(affixResult.removed).toBe("-lah");
+    expect(affixResult.word).toBe("makan");
+    expect(prefixResult.removed).toBe("me-");
+    expect(prefixResult.word).toBe("makan");
+    expect(prefixResult.recoding).toEqual(["p"]);
   });
 
   it("functions as expected using the exported classes (example usage)", () => {
